@@ -48,3 +48,4 @@ logs/
 *.bak
 *.swp
 *~
+automation-library/
