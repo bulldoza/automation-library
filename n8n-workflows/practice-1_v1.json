@@ -1,0 +1,63 @@
+{
+  "updatedAt": "2026-05-25T17:31:27.000Z",
+  "createdAt": "2026-05-24T12:50:44.113Z",
+  "id": "58GkRpIfoUXKUdnz",
+  "name": "Practice 1",
+  "description": null,
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        -96
+      ],
+      "id": "9d9fba69-0bf8-4af2-836c-af7fafa51404",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp",
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "7a51e63d-c9dd-4f69-83c6-f2105002dbaf",
+  "activeVersionId": null,
+  "versionCounter": 274,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-05-24T12:50:44.116Z",
+      "createdAt": "2026-05-24T12:50:44.116Z",
+      "role": "workflow:owner",
+      "workflowId": "58GkRpIfoUXKUdnz",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

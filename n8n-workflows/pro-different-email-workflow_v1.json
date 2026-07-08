@@ -1,0 +1,451 @@
+{
+  "updatedAt": "2026-05-26T16:45:32.989Z",
+  "createdAt": "2026-03-25T14:35:20.763Z",
+  "id": "NPGCc7NRKx9Ya6nF48LSR",
+  "name": "[PRO] Different email workflow",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "practice-lead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1152,
+        -272
+      ],
+      "id": "ffd78ac5-60cc-4eb3-80d1-d2cf1f7df66a",
+      "name": "Webhook",
+      "webhookId": "b4b3bd2a-04de-48e6-9bf6-e6914b3b2f9a"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Eq3Xlccrhppvb3t1KzhH72fS8jZ8NLI5O1P1lSItf0g",
+          "mode": "list",
+          "cachedResultName": "Request",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Eq3Xlccrhppvb3t1KzhH72fS8jZ8NLI5O1P1lSItf0g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "bulldoza",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Eq3Xlccrhppvb3t1KzhH72fS8jZ8NLI5O1P1lSItf0g/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.body.name }}",
+            "email": "={{ $json.body.email }}",
+            "message": "={{ $json.body.message }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -944,
+        -176
+      ],
+      "id": "32eac7c2-75e9-4394-b2d4-7b1c2684a6ba",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BilvEw7WltNshgzj",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fa6d71a7-e969-4539-ab4d-b2b77768b74d",
+              "name": "name",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "4d0744bd-5c22-4881-82e4-f09637481867",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "1dd940fe-7621-41c8-8e69-4f00f5f0ea31",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -944,
+        -368
+      ],
+      "id": "251fa1d2-7eca-4970-ada5-53889eb65106",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "sendTo": "=velbaah@gmail.com ",
+        "subject": "=New message from {{ $json.name }}",
+        "message": "=<h3>New Lead Received!</h3>\n<p><b>Name:</b> {{ $json.name }}</p>\n<p><b>Email:</b> {{ $json.email }}</p>\n<hr>\n<p><b>Message:</b><br>\n{{ $json.message }}</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        -320
+      ],
+      "id": "43a02191-be63-4aac-b153-99dff574ceda",
+      "name": "Send a message",
+      "webhookId": "839917fc-86f0-4d68-8aab-904382c00b59",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wowdcF7YQpO3kzPF",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Testing a different email address - velbaah@gmail.com"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -784,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "53c62a21-d6dc-4001-b5af-b186693a0adf",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "eb99f509-2f5f-49eb-8aa4-1f93ea05cb99",
+  "activeVersionId": "eb99f509-2f5f-49eb-8aa4-1f93ea05cb99",
+  "versionCounter": 84,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-03-25T14:35:20.765Z",
+      "createdAt": "2026-03-25T14:35:20.765Z",
+      "role": "workflow:owner",
+      "workflowId": "NPGCc7NRKx9Ya6nF48LSR",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-05-26T16:46:08.000Z",
+    "createdAt": "2026-05-26T16:45:32.990Z",
+    "versionId": "eb99f509-2f5f-49eb-8aa4-1f93ea05cb99",
+    "workflowId": "NPGCc7NRKx9Ya6nF48LSR",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "practice-lead",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -1152,
+          -272
+        ],
+        "id": "ffd78ac5-60cc-4eb3-80d1-d2cf1f7df66a",
+        "name": "Webhook",
+        "webhookId": "b4b3bd2a-04de-48e6-9bf6-e6914b3b2f9a"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1Eq3Xlccrhppvb3t1KzhH72fS8jZ8NLI5O1P1lSItf0g",
+            "mode": "list",
+            "cachedResultName": "Request",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Eq3Xlccrhppvb3t1KzhH72fS8jZ8NLI5O1P1lSItf0g/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "bulldoza",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Eq3Xlccrhppvb3t1KzhH72fS8jZ8NLI5O1P1lSItf0g/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "name": "={{ $json.body.name }}",
+              "email": "={{ $json.body.email }}",
+              "message": "={{ $json.body.message }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "name",
+                "displayName": "name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "email",
+                "displayName": "email",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "message",
+                "displayName": "message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -944,
+          -176
+        ],
+        "id": "32eac7c2-75e9-4394-b2d4-7b1c2684a6ba",
+        "name": "Append row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "BilvEw7WltNshgzj",
+            "name": "Google Sheets account 3"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "fa6d71a7-e969-4539-ab4d-b2b77768b74d",
+                "name": "name",
+                "value": "={{ $json.body.name }}",
+                "type": "string"
+              },
+              {
+                "id": "4d0744bd-5c22-4881-82e4-f09637481867",
+                "name": "email",
+                "value": "={{ $json.body.email }}",
+                "type": "string"
+              },
+              {
+                "id": "1dd940fe-7621-41c8-8e69-4f00f5f0ea31",
+                "name": "message",
+                "value": "={{ $json.body.message }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -944,
+          -368
+        ],
+        "id": "251fa1d2-7eca-4970-ada5-53889eb65106",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "sendTo": "=velbaah@gmail.com ",
+          "subject": "=New message from {{ $json.name }}",
+          "message": "=<h3>New Lead Received!</h3>\n<p><b>Name:</b> {{ $json.name }}</p>\n<p><b>Email:</b> {{ $json.email }}</p>\n<hr>\n<p><b>Message:</b><br>\n{{ $json.message }}</p>",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [
+          -720,
+          -320
+        ],
+        "id": "43a02191-be63-4aac-b153-99dff574ceda",
+        "name": "Send a message",
+        "webhookId": "839917fc-86f0-4d68-8aab-904382c00b59",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "wowdcF7YQpO3kzPF",
+            "name": "Gmail account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "Testing a different email address - velbaah@gmail.com"
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -784,
+          -384
+        ],
+        "typeVersion": 1,
+        "id": "53c62a21-d6dc-4001-b5af-b186693a0adf",
+        "name": "Sticky Note"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version eb99f509",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-05-26T16:46:08.891Z",
+        "id": 286,
+        "workflowId": "NPGCc7NRKx9Ya6nF48LSR",
+        "versionId": "eb99f509-2f5f-49eb-8aa4-1f93ea05cb99",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

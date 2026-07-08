@@ -1,0 +1,492 @@
+{
+  "updatedAt": "2026-07-01T20:33:33.353Z",
+  "createdAt": "2026-06-29T20:00:23.069Z",
+  "id": "u8POtPRLNM38w82e",
+  "name": "Document Search",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            }
+          ]
+        }
+      },
+      "id": "722a360a-e550-43b8-ba19-224f4b7953af",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "prompt": "={{ $json.query }}",
+        "topK": 5,
+        "options": {
+          "pineconeNamespace": "it"
+        }
+      },
+      "id": "f76c4096-4ac9-4fa9-b7c1-9f1d94453b6e",
+      "name": "Pinecone Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        112
+      ],
+      "credentials": {
+        "pineconeApi": {
+          "id": "6edVpSC0dEbmrlNy",
+          "name": "Pinecone account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "dimensions": 512,
+          "batchSize": 512
+        }
+      },
+      "id": "c0bb048e-7705-4150-9013-83408924d4c7",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        304,
+        336
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "i0OpQdiKjVHo9w97",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a77f8b69-a93e-4e3d-ac79-5237cad8bb03",
+              "name": "Content",
+              "value": "={{ $json.document.pageContent }}",
+              "type": "string"
+            },
+            {
+              "id": "6b549133-4e57-4d2a-86df-b1a43239b4ce",
+              "name": "Source File",
+              "value": "={{ $json.document.metadata.source }}",
+              "type": "string"
+            },
+            {
+              "id": "23dfd17d-86ac-469c-b36b-39098ebed040",
+              "name": "Page",
+              "value": "={{ $json.document.metadata['loc.pageNumber'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c0d7cd42-6c7f-415d-9c01-b2bc17b3e791",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        576,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "95cae380-3931-4e45-a17a-0adf3ce96502",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        800,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4b888191-e74e-4cc9-95fc-82ae47cdf781",
+              "name": "response",
+              "value": "={{ $json.toJsonString() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1008,
+        128
+      ],
+      "id": "e81f49a7-e67d-4d71-9298-5743b536a87b",
+      "name": "Edit Fields1"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "nodeGroups": [],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "Email templates aren’t displaying dynamic fields."
+        }
+      }
+    ]
+  },
+  "versionId": "390308d8-f3c7-457e-9195-ad35ba10bcad",
+  "activeVersionId": "390308d8-f3c7-457e-9195-ad35ba10bcad",
+  "versionCounter": 147,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-29T20:00:23.072Z",
+      "createdAt": "2026-06-29T20:00:23.072Z",
+      "role": "workflow:owner",
+      "workflowId": "u8POtPRLNM38w82e",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-07-01T20:33:34.000Z",
+    "createdAt": "2026-07-01T20:33:33.354Z",
+    "versionId": "390308d8-f3c7-457e-9195-ad35ba10bcad",
+    "workflowId": "u8POtPRLNM38w82e",
+    "nodes": [
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "query"
+              }
+            ]
+          }
+        },
+        "id": "722a360a-e550-43b8-ba19-224f4b7953af",
+        "name": "When Executed by Another Workflow",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          0,
+          112
+        ]
+      },
+      {
+        "parameters": {
+          "mode": "load",
+          "pineconeIndex": {
+            "__rl": true,
+            "value": "documents",
+            "mode": "list",
+            "cachedResultName": "documents"
+          },
+          "prompt": "={{ $json.query }}",
+          "topK": 5,
+          "options": {
+            "pineconeNamespace": "it"
+          }
+        },
+        "id": "f76c4096-4ac9-4fa9-b7c1-9f1d94453b6e",
+        "name": "Pinecone Vector Store",
+        "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "typeVersion": 1.3,
+        "position": [
+          224,
+          112
+        ],
+        "credentials": {
+          "pineconeApi": {
+            "id": "6edVpSC0dEbmrlNy",
+            "name": "Pinecone account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {
+            "dimensions": 512,
+            "batchSize": 512
+          }
+        },
+        "id": "c0bb048e-7705-4150-9013-83408924d4c7",
+        "name": "Embeddings OpenAI",
+        "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          304,
+          336
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "i0OpQdiKjVHo9w97",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "a77f8b69-a93e-4e3d-ac79-5237cad8bb03",
+                "name": "Content",
+                "value": "={{ $json.document.pageContent }}",
+                "type": "string"
+              },
+              {
+                "id": "6b549133-4e57-4d2a-86df-b1a43239b4ce",
+                "name": "Source File",
+                "value": "={{ $json.document.metadata.source }}",
+                "type": "string"
+              },
+              {
+                "id": "23dfd17d-86ac-469c-b36b-39098ebed040",
+                "name": "Page",
+                "value": "={{ $json.document.metadata['loc.pageNumber'] }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "c0d7cd42-6c7f-415d-9c01-b2bc17b3e791",
+        "name": "Edit Fields",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          576,
+          112
+        ]
+      },
+      {
+        "parameters": {
+          "aggregate": "aggregateAllItemData",
+          "options": {}
+        },
+        "id": "95cae380-3931-4e45-a17a-0adf3ce96502",
+        "name": "Aggregate",
+        "type": "n8n-nodes-base.aggregate",
+        "typeVersion": 1,
+        "position": [
+          800,
+          112
+        ]
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "4b888191-e74e-4cc9-95fc-82ae47cdf781",
+                "name": "response",
+                "value": "={{ $json.toJsonString() }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1008,
+          128
+        ],
+        "id": "e81f49a7-e67d-4d71-9298-5743b536a87b",
+        "name": "Edit Fields1"
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Pinecone Vector Store",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Pinecone Vector Store": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Embeddings OpenAI": {
+        "ai_embedding": [
+          [
+            {
+              "node": "Pinecone Vector Store",
+              "type": "ai_embedding",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Aggregate",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Aggregate": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields1": {
+        "main": [
+          []
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version 390308d8",
+    "description": "",
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-07-01T20:33:34.318Z",
+        "id": 628,
+        "workflowId": "u8POtPRLNM38w82e",
+        "versionId": "390308d8-f3c7-457e-9195-ad35ba10bcad",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

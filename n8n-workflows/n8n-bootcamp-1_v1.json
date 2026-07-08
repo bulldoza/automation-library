@@ -1,0 +1,308 @@
+{
+  "updatedAt": "2026-06-18T17:21:05.130Z",
+  "createdAt": "2026-06-16T16:47:48.857Z",
+  "id": "MC5Rrg8TSpf1uBNh",
+  "name": "n8n bootcamp-1",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "IT Service Request",
+        "formDescription": "Submit your issue here",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Issue description",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Your Name",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "IT support will be in touch shortly."
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -992,
+        -224
+      ],
+      "id": "e6f1d7b1-b94b-4ebc-82d1-301eeceb2558",
+      "name": "On form submission",
+      "webhookId": "2a87dd5d-7200-43ce-a2d5-7121a829a9df"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb8d1b73-b4de-4fe1-a501-b18159968c21",
+              "name": "ID",
+              "value": "={{ $json.submittedAt.toDateTime().ts.toString(36).toUpperCase() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -768,
+        -224
+      ],
+      "id": "69dd0098-a4e9-44ba-bb97-0c1afa335972",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "bulldoza",
+          "mode": "list",
+          "cachedResultName": "bulldoza",
+          "cachedResultUrl": "https://github.com/bulldoza"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-ai-bootcamp",
+          "mode": "list",
+          "cachedResultName": "n8n-ai-bootcamp",
+          "cachedResultUrl": "https://github.com/bulldoza/n8n-ai-bootcamp"
+        },
+        "filePath": "=day 1/project 1 / {{ $json.ID }}",
+        "fileContent": "=Name:  \n{{ $('On form submission').item.json['Your Name'] }}\n\nSubmitted: \n{{ $('On form submission').item.json.submittedAt }}\n\nDescription:\n{{ $('On form submission').item.json.formMode }}",
+        "commitMessage": "new ticket"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        -544,
+        -224
+      ],
+      "id": "2811cd56-dfe0-492f-8ee4-819478b369aa",
+      "name": "Create a file",
+      "webhookId": "0766a270-7789-42fb-9ae5-969224b73d34",
+      "credentials": {
+        "githubApi": {
+          "id": "Gz7aNrcVXGc1r3Qf",
+          "name": "GitHub account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Create a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "2fe32aac-cfdb-42c1-a886-7f6442577de8",
+  "activeVersionId": "2fe32aac-cfdb-42c1-a886-7f6442577de8",
+  "versionCounter": 161,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-16T16:47:48.859Z",
+      "createdAt": "2026-06-16T16:47:48.859Z",
+      "role": "workflow:owner",
+      "workflowId": "MC5Rrg8TSpf1uBNh",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-06-18T18:02:08.000Z",
+    "createdAt": "2026-06-18T17:21:05.130Z",
+    "versionId": "2fe32aac-cfdb-42c1-a886-7f6442577de8",
+    "workflowId": "MC5Rrg8TSpf1uBNh",
+    "nodes": [
+      {
+        "parameters": {
+          "formTitle": "IT Service Request",
+          "formDescription": "Submit your issue here",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "Issue description",
+                "fieldType": "textarea",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Your Name",
+                "requiredField": true
+              }
+            ]
+          },
+          "options": {
+            "respondWithOptions": {
+              "values": {
+                "formSubmittedText": "IT support will be in touch shortly."
+              }
+            }
+          }
+        },
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.5,
+        "position": [
+          -992,
+          -224
+        ],
+        "id": "e6f1d7b1-b94b-4ebc-82d1-301eeceb2558",
+        "name": "On form submission",
+        "webhookId": "2a87dd5d-7200-43ce-a2d5-7121a829a9df"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "cb8d1b73-b4de-4fe1-a501-b18159968c21",
+                "name": "ID",
+                "value": "={{ $json.submittedAt.toDateTime().ts.toString(36).toUpperCase() }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -768,
+          -224
+        ],
+        "id": "69dd0098-a4e9-44ba-bb97-0c1afa335972",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "resource": "file",
+          "owner": {
+            "__rl": true,
+            "value": "bulldoza",
+            "mode": "list",
+            "cachedResultName": "bulldoza",
+            "cachedResultUrl": "https://github.com/bulldoza"
+          },
+          "repository": {
+            "__rl": true,
+            "value": "n8n-ai-bootcamp",
+            "mode": "list",
+            "cachedResultName": "n8n-ai-bootcamp",
+            "cachedResultUrl": "https://github.com/bulldoza/n8n-ai-bootcamp"
+          },
+          "filePath": "=day 1/project 1 / {{ $json.ID }}",
+          "fileContent": "=Name:  \n{{ $('On form submission').item.json['Your Name'] }}\n\nSubmitted: \n{{ $('On form submission').item.json.submittedAt }}\n\nDescription:\n{{ $('On form submission').item.json.formMode }}",
+          "commitMessage": "new ticket"
+        },
+        "type": "n8n-nodes-base.github",
+        "typeVersion": 1.1,
+        "position": [
+          -544,
+          -224
+        ],
+        "id": "2811cd56-dfe0-492f-8ee4-819478b369aa",
+        "name": "Create a file",
+        "webhookId": "0766a270-7789-42fb-9ae5-969224b73d34",
+        "credentials": {
+          "githubApi": {
+            "id": "Gz7aNrcVXGc1r3Qf",
+            "name": "GitHub account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "On form submission": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Create a file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version 2fe32aac",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-18T18:02:08.203Z",
+        "id": 454,
+        "workflowId": "MC5Rrg8TSpf1uBNh",
+        "versionId": "2fe32aac-cfdb-42c1-a886-7f6442577de8",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

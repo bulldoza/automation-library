@@ -1,0 +1,318 @@
+{
+  "updatedAt": "2026-03-24T17:42:37.000Z",
+  "createdAt": "2026-03-24T17:15:39.540Z",
+  "id": "fWc9f38aIFwy0XJn",
+  "name": "AI Consultant website",
+  "description": null,
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "newclient-lead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -752,
+        -320
+      ],
+      "id": "d5081121-8c07-4eea-8ac9-80f3fe1e6d2f",
+      "name": "Webhook",
+      "webhookId": "10693c03-f525-4bc8-b41e-023dcb65165e"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5e78ea5a-0dc1-446f-9419-2b4d6692ef94",
+              "name": "name",
+              "value": "={{$json.body.name}}",
+              "type": "string"
+            },
+            {
+              "id": "472419c1-20f7-4f71-974b-cce68153c0ff",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "6faf16bc-28c9-4b7f-88f4-747f0fc1b489",
+              "name": "phone",
+              "value": "={{$json.body.phone}}",
+              "type": "string"
+            },
+            {
+              "id": "30161694-c84a-458f-974d-0552f29d5fc0",
+              "name": "company",
+              "value": "={{ $json.body.company }}",
+              "type": "string"
+            },
+            {
+              "id": "1385e10d-9bf8-4901-a50e-8ee560a83e0a",
+              "name": "website",
+              "value": "={{ $json.body.website }}",
+              "type": "string"
+            },
+            {
+              "id": "cbd0c37a-a1de-49d3-ad03-9d0ca842385f",
+              "name": "service",
+              "value": "={{ $json.body.service }}",
+              "type": "string"
+            },
+            {
+              "id": "8514ce3a-ad65-4bdd-b50d-486ef65d9d7c",
+              "name": "timeline",
+              "value": "={{ $json.body.timeline }}",
+              "type": "string"
+            },
+            {
+              "id": "0e4554b3-14e8-4e05-bcd6-8c971abe62e6",
+              "name": "details",
+              "value": "={{ $json.body.details }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -544,
+        -320
+      ],
+      "id": "41f3e664-fcb7-4cc9-b915-42acf3e73668",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4",
+          "mode": "list",
+          "cachedResultName": "AI Consultant",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.email }}",
+            "Company": "={{ $json.company }}",
+            "Timeline": "={{ $json.timeline }}",
+            "Name ": "={{ $json.name }}",
+            "Phone": "={{ $json.phone }}",
+            "Website URL": "={{ $json.website }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name ",
+              "displayName": "Name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website URL",
+              "displayName": "Website URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interest",
+              "displayName": "Interest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timeline",
+              "displayName": "Timeline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Improve",
+              "displayName": "Improve",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -224,
+        -320
+      ],
+      "id": "f753d031-4659-4499-8554-1d8047923890",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BilvEw7WltNshgzj",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "petermv.baah@gmail.com",
+        "subject": "New Lead- AI Consultant",
+        "message": "=New Lead Received\n\n<div style=\"font-family: sans-serif; line-height: 1.5; color: #333;\">\n  <h2 style=\"color: #2a5fb2; border-bottom: 1px solid #eee; padding-bottom: 10px;\">🚀 New Website Lead</h2>\n  \n  <p><strong>Name:</strong> {{ $json.name }}</p>\n  <p><strong>Email:</strong> {{ $json.email }}</p>\n  <p><strong>Phone:</strong> {{ $json.phone }}</p>\n  <p><strong>Company:</strong> {{ $json.company }}</p>\n  <br>\n  <div style=\"background: #f9f9f9; padding: 15px; border-radius: 5px;\">\n    <p><strong>Service:</strong> {{ $json.service }}</p>\n<p><strong>Timeline:</strong> {{ $json.timeline }}</p>\n<br>\n<div style=\"background: #f9f9f9; padding: 15px; border-radius: 5px;\">\n    <strong>Message/Details:</strong><br>\n    {{ $json.details }}\n</div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -352,
+        -128
+      ],
+      "id": "624c34ed-bf12-4d15-bc99-81705f4e7c40",
+      "name": "Send a message",
+      "webhookId": "7946da82-2912-4f4a-9f8b-7ed46325f644",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wowdcF7YQpO3kzPF",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "8300cc16-259e-47d0-a8f6-1aa7b9f936be",
+  "activeVersionId": null,
+  "versionCounter": 23,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-03-24T17:15:39.547Z",
+      "createdAt": "2026-03-24T17:15:39.547Z",
+      "role": "workflow:owner",
+      "workflowId": "fWc9f38aIFwy0XJn",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

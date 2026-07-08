@@ -1,0 +1,468 @@
+{
+  "updatedAt": "2026-07-07T00:50:52.533Z",
+  "createdAt": "2026-07-06T21:35:48.235Z",
+  "id": "N1olz4cgoFXMdurv",
+  "name": "P9 -MCP Client",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "id": "703f7904-8c5e-4695-968a-9e1231a21a66",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        112
+      ],
+      "webhookId": "f25610fe-40ce-40f1-b121-42238580b1a4"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "## PCTOC Prompt — IT Support Chatbot\n\n### Purpose\n\nYou are an IT Support Chatbot for a corporate helpdesk. Help employees troubleshoot Nova CRM, Windows, Microsoft Office, Teams, login, and device issues while managing support tickets.\n\n### Critical Rule\n\nIf the user provides a ticket ID, retrieve the ticket before doing anything else using:\n`day 2/project 7/tickets/<TICKET_ID>.txt`\n\nDo not ask the user to repeat the issue. Do not create a new ticket when a ticket ID is provided.\n\n### Context\n\nUsers may report a new issue, provide an existing ticket ID, or ask about Nova CRM. Always identify the person who reported the concern.\n\nUse this format:\n“[User Name] reported an issue with [device/app/system].”\n\nIf the user is reporting for someone else, capture both the reporter and affected user.\n\n### Task\n\nStart every new conversation by introducing yourself:\n\n“Hello, I’m your IT Support Assistant. I can help with Nova CRM, Windows, Microsoft Office, Teams, login issues, and support tickets.”\n\nThen ask:\n“Do you already have a ticket ID?”\n\nIf a ticket ID is provided, retrieve it immediately, then summarize:\n\n* Ticket ID\n* Reporter name\n* Affected user, if different\n* Status\n* Priority\n* Issue summary\n* Latest note\n\nIf no ticket ID is provided, ask for:\n\n* User name\n* Whether they are reporting for themselves or someone else\n* Issue description\n* Device/app/system involved\n* Business impact\n\nClassify the issue as **Automated Support** for routine Windows, Office, Teams, login, printer, OneDrive, or basic errors.\n\nClassify as **Route to IT** for hardware, outages, admin rights, security, phishing, malware, data loss, multiple users affected, executive impact, or unclear issues.\n\nMark **Urgent** only for malware, phishing, compromised accounts, data loss, multi-user outages, inability to work, or business-critical impact.\n\n### Output\n\nUse short, professional responses. Use numbered steps for troubleshooting. Include the reporter’s name when creating, updating, summarizing, or escalating a ticket.\n\nExample:\n“Maria Lopez reported an issue with Nova CRM login access.”\n\nFor Nova CRM answers, use the search tool and cite the source and page number.\n\n### Constraints\n\nDo not assume or invent a user name.\nDo not create duplicate tickets.\nDo not ask the user to repeat the issue after retrieving a ticket.\nAlways confirm troubleshooting worked before closing.\n"
+        }
+      },
+      "id": "fe250cd5-b1af-4c42-812f-1dda63c7dbe7",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        352,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "8aadc8e8-550d-4870-b56c-3ad913d84bda",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        176,
+        320
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "i0OpQdiKjVHo9w97",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "id": "7a4b4fa6-d93d-43cc-be09-fab2072e53dc",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        336,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to search the user manual of the Nova CRM software.",
+        "workflowId": {
+          "__rl": true,
+          "value": "u8POtPRLNM38w82e",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/u8POtPRLNM38w82e",
+          "cachedResultName": "Document Search"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ $fromAI('query', `Search query for Nova CRM manuals.`, 'string') }}"
+          },
+          "matchingColumns": [
+            "query"
+          ],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "21b39954-0aaf-48cd-9fd9-60bb6e0f9d61",
+      "name": "Search CRM Manual Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://rankn8n.com/mcp/75612ae3-5438-43b7-b8b2-6ed6ac08ba3c",
+        "include": "selected",
+        "includeTools": [
+          "Ticket_Creation_Tool",
+          "Update_Ticket",
+          "Get_Ticket"
+        ],
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        320
+      ],
+      "id": "594205bd-1ffa-41e5-a03f-120dae448e34",
+      "name": "MCP Client"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search CRM Manual Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "da410c2a-a711-4f99-a484-dd9c27e441c3",
+  "activeVersionId": "da410c2a-a711-4f99-a484-dd9c27e441c3",
+  "versionCounter": 30,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-07-06T21:35:48.236Z",
+      "createdAt": "2026-07-06T21:35:48.236Z",
+      "role": "workflow:owner",
+      "workflowId": "N1olz4cgoFXMdurv",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-07-06T22:09:11.000Z",
+    "createdAt": "2026-07-06T22:08:48.444Z",
+    "versionId": "da410c2a-a711-4f99-a484-dd9c27e441c3",
+    "workflowId": "N1olz4cgoFXMdurv",
+    "nodes": [
+      {
+        "parameters": {
+          "public": true,
+          "options": {}
+        },
+        "id": "703f7904-8c5e-4695-968a-9e1231a21a66",
+        "name": "When chat message received",
+        "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "typeVersion": 1.3,
+        "position": [
+          0,
+          112
+        ],
+        "webhookId": "f25610fe-40ce-40f1-b121-42238580b1a4"
+      },
+      {
+        "parameters": {
+          "options": {
+            "systemMessage": "## PCTOC Prompt — IT Support Chatbot\n\n### Purpose\n\nYou are an IT Support Chatbot for a corporate helpdesk. Help employees troubleshoot Nova CRM, Windows, Microsoft Office, Teams, login, and device issues while managing support tickets.\n\n### Critical Rule\n\nIf the user provides a ticket ID, retrieve the ticket before doing anything else using:\n`day 2/project 7/tickets/<TICKET_ID>.txt`\n\nDo not ask the user to repeat the issue. Do not create a new ticket when a ticket ID is provided.\n\n### Context\n\nUsers may report a new issue, provide an existing ticket ID, or ask about Nova CRM. Always identify the person who reported the concern.\n\nUse this format:\n“[User Name] reported an issue with [device/app/system].”\n\nIf the user is reporting for someone else, capture both the reporter and affected user.\n\n### Task\n\nStart every new conversation by introducing yourself:\n\n“Hello, I’m your IT Support Assistant. I can help with Nova CRM, Windows, Microsoft Office, Teams, login issues, and support tickets.”\n\nThen ask:\n“Do you already have a ticket ID?”\n\nIf a ticket ID is provided, retrieve it immediately, then summarize:\n\n* Ticket ID\n* Reporter name\n* Affected user, if different\n* Status\n* Priority\n* Issue summary\n* Latest note\n\nIf no ticket ID is provided, ask for:\n\n* User name\n* Whether they are reporting for themselves or someone else\n* Issue description\n* Device/app/system involved\n* Business impact\n\nClassify the issue as **Automated Support** for routine Windows, Office, Teams, login, printer, OneDrive, or basic errors.\n\nClassify as **Route to IT** for hardware, outages, admin rights, security, phishing, malware, data loss, multiple users affected, executive impact, or unclear issues.\n\nMark **Urgent** only for malware, phishing, compromised accounts, data loss, multi-user outages, inability to work, or business-critical impact.\n\n### Output\n\nUse short, professional responses. Use numbered steps for troubleshooting. Include the reporter’s name when creating, updating, summarizing, or escalating a ticket.\n\nExample:\n“Maria Lopez reported an issue with Nova CRM login access.”\n\nFor Nova CRM answers, use the search tool and cite the source and page number.\n\n### Constraints\n\nDo not assume or invent a user name.\nDo not create duplicate tickets.\nDo not ask the user to repeat the issue after retrieving a ticket.\nAlways confirm troubleshooting worked before closing.\n"
+          }
+        },
+        "id": "fe250cd5-b1af-4c42-812f-1dda63c7dbe7",
+        "name": "AI Agent",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3.1,
+        "position": [
+          352,
+          112
+        ]
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o",
+            "mode": "list",
+            "cachedResultName": "gpt-4o"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "id": "8aadc8e8-550d-4870-b56c-3ad913d84bda",
+        "name": "OpenAI Chat Model",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          176,
+          320
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "i0OpQdiKjVHo9w97",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "contextWindowLength": 10
+        },
+        "id": "7a4b4fa6-d93d-43cc-be09-fab2072e53dc",
+        "name": "Simple Memory",
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          336,
+          304
+        ]
+      },
+      {
+        "parameters": {
+          "description": "Call this tool to search the user manual of the Nova CRM software.",
+          "workflowId": {
+            "__rl": true,
+            "value": "u8POtPRLNM38w82e",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/u8POtPRLNM38w82e",
+            "cachedResultName": "Document Search"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "query": "={{ $fromAI('query', `Search query for Nova CRM manuals.`, 'string') }}"
+            },
+            "matchingColumns": [
+              "query"
+            ],
+            "schema": [
+              {
+                "id": "query",
+                "displayName": "query",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "id": "21b39954-0aaf-48cd-9fd9-60bb6e0f9d61",
+        "name": "Search CRM Manual Tool",
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          480,
+          304
+        ]
+      },
+      {
+        "parameters": {
+          "endpointUrl": "https://rankn8n.com/mcp/75612ae3-5438-43b7-b8b2-6ed6ac08ba3c",
+          "include": "selected",
+          "includeTools": [
+            "Ticket_Creation_Tool",
+            "Update_Ticket",
+            "Get_Ticket"
+          ],
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+        "typeVersion": 1.2,
+        "position": [
+          640,
+          320
+        ],
+        "id": "594205bd-1ffa-41e5-a03f-120dae448e34",
+        "name": "MCP Client"
+      }
+    ],
+    "connections": {
+      "When chat message received": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Search CRM Manual Tool": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "MCP Client": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version da410c2a",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-07-06T22:09:11.376Z",
+        "id": 662,
+        "workflowId": "N1olz4cgoFXMdurv",
+        "versionId": "da410c2a-a711-4f99-a484-dd9c27e441c3",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      },
+      {
+        "createdAt": "2026-07-07T00:50:52.635Z",
+        "id": 664,
+        "workflowId": "N1olz4cgoFXMdurv",
+        "versionId": "da410c2a-a711-4f99-a484-dd9c27e441c3",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      },
+      {
+        "createdAt": "2026-07-07T00:50:52.610Z",
+        "id": 663,
+        "workflowId": "N1olz4cgoFXMdurv",
+        "versionId": "da410c2a-a711-4f99-a484-dd9c27e441c3",
+        "event": "deactivated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

@@ -1,0 +1,308 @@
+{
+  "updatedAt": "2026-06-29T13:36:54.180Z",
+  "createdAt": "2026-06-28T15:33:55.794Z",
+  "id": "jkkK8DbaRzOE6o8v",
+  "name": "Ticket Creation Workflow",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "User Name"
+            },
+            {
+              "name": "Issue Description"
+            },
+            {
+              "name": "Status"
+            },
+            {
+              "name": "Priority"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -944,
+        -176
+      ],
+      "id": "dfebd868-a9c5-46bb-b567-8cdeaa865c83",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7137db93-cd9a-4763-9e5a-26c134c94f57",
+              "name": "ID",
+              "value": "={{ $now.ts.toString(36).toUpperCase() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -736,
+        -176
+      ],
+      "id": "56f8360a-759d-4769-95e8-7c6c7e19b9e7",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "bulldoza",
+          "mode": "list",
+          "cachedResultName": "bulldoza",
+          "cachedResultUrl": "https://github.com/bulldoza"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-ai-bootcamp",
+          "mode": "list",
+          "cachedResultName": "n8n-ai-bootcamp",
+          "cachedResultUrl": "https://github.com/bulldoza/n8n-ai-bootcamp"
+        },
+        "filePath": "=day 2/project 7/tickets/{{ $json.ID }}.txt",
+        "fileContent": "=User Name: {{ $('When Executed by Another Workflow').item.json['User Name'] }}\nSubmitted: {{ $now }}\nDescription: {{ $('When Executed by Another Workflow').item.json['Issue Description'] }}\nStatus: {{ $('When Executed by Another Workflow').item.json['Status'] }}\nPriority: {{ $('When Executed by Another Workflow').item.json['Priority'] }}",
+        "commitMessage": "new ticket"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        -528,
+        -176
+      ],
+      "id": "7a43fcae-6092-40a7-9685-d4ea504a93c5",
+      "name": "Create a file",
+      "webhookId": "288c746c-b2e5-4245-9a07-b0b2c2793f85",
+      "credentials": {
+        "githubApi": {
+          "id": "Gz7aNrcVXGc1r3Qf",
+          "name": "GitHub account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Create a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "User Name": "Peter",
+          "Issue Description": "My laptop fell and it is broken now",
+          "Status": "Open",
+          "Priority": "Urgent"
+        }
+      }
+    ]
+  },
+  "versionId": "d8f32a55-b30b-4f60-821b-83b1e8f5276a",
+  "activeVersionId": "d8f32a55-b30b-4f60-821b-83b1e8f5276a",
+  "versionCounter": 53,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-28T15:33:55.796Z",
+      "createdAt": "2026-06-28T15:33:55.796Z",
+      "role": "workflow:owner",
+      "workflowId": "jkkK8DbaRzOE6o8v",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-06-29T13:36:59.000Z",
+    "createdAt": "2026-06-29T13:36:54.181Z",
+    "versionId": "d8f32a55-b30b-4f60-821b-83b1e8f5276a",
+    "workflowId": "jkkK8DbaRzOE6o8v",
+    "nodes": [
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "User Name"
+              },
+              {
+                "name": "Issue Description"
+              },
+              {
+                "name": "Status"
+              },
+              {
+                "name": "Priority"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -944,
+          -176
+        ],
+        "id": "dfebd868-a9c5-46bb-b567-8cdeaa865c83",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "7137db93-cd9a-4763-9e5a-26c134c94f57",
+                "name": "ID",
+                "value": "={{ $now.ts.toString(36).toUpperCase() }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -736,
+          -176
+        ],
+        "id": "56f8360a-759d-4769-95e8-7c6c7e19b9e7",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "resource": "file",
+          "owner": {
+            "__rl": true,
+            "value": "bulldoza",
+            "mode": "list",
+            "cachedResultName": "bulldoza",
+            "cachedResultUrl": "https://github.com/bulldoza"
+          },
+          "repository": {
+            "__rl": true,
+            "value": "n8n-ai-bootcamp",
+            "mode": "list",
+            "cachedResultName": "n8n-ai-bootcamp",
+            "cachedResultUrl": "https://github.com/bulldoza/n8n-ai-bootcamp"
+          },
+          "filePath": "=day 2/project 7/tickets/{{ $json.ID }}.txt",
+          "fileContent": "=User Name: {{ $('When Executed by Another Workflow').item.json['User Name'] }}\nSubmitted: {{ $now }}\nDescription: {{ $('When Executed by Another Workflow').item.json['Issue Description'] }}\nStatus: {{ $('When Executed by Another Workflow').item.json['Status'] }}\nPriority: {{ $('When Executed by Another Workflow').item.json['Priority'] }}",
+          "commitMessage": "new ticket"
+        },
+        "type": "n8n-nodes-base.github",
+        "typeVersion": 1.1,
+        "position": [
+          -528,
+          -176
+        ],
+        "id": "7a43fcae-6092-40a7-9685-d4ea504a93c5",
+        "name": "Create a file",
+        "webhookId": "288c746c-b2e5-4245-9a07-b0b2c2793f85",
+        "credentials": {
+          "githubApi": {
+            "id": "Gz7aNrcVXGc1r3Qf",
+            "name": "GitHub account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Create a file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version d8f32a55",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-29T13:36:59.175Z",
+        "id": 553,
+        "workflowId": "jkkK8DbaRzOE6o8v",
+        "versionId": "d8f32a55-b30b-4f60-821b-83b1e8f5276a",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

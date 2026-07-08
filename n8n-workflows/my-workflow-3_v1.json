@@ -1,0 +1,49 @@
+{
+  "updatedAt": "2026-03-04T13:33:23.000Z",
+  "createdAt": "2026-03-03T00:37:11.128Z",
+  "id": "LBB2Dbn7O_vF1vCzkWQVQ",
+  "name": "My workflow 3",
+  "description": null,
+  "active": false,
+  "isArchived": true,
+  "nodes": [],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "0f6e149c-cd34-42b1-8510-545dd489bcda",
+  "activeVersionId": null,
+  "versionCounter": 40,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-03-03T00:37:11.132Z",
+      "createdAt": "2026-03-03T00:37:11.132Z",
+      "role": "workflow:owner",
+      "workflowId": "LBB2Dbn7O_vF1vCzkWQVQ",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

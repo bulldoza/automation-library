@@ -1,0 +1,307 @@
+{
+  "updatedAt": "2026-06-05T14:42:36.374Z",
+  "createdAt": "2026-06-05T14:04:20.288Z",
+  "id": "9eYOdmPK7ibLV3b8",
+  "name": "Error Generator",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "error",
+        "options": {}
+      },
+      "id": "124f5d74-0ecc-450e-af6a-29d03a3d0ddd",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        112
+      ],
+      "webhookId": "708861c6-936e-4c99-b00a-575b36d19916"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "You are a helpful assistant."
+        }
+      },
+      "id": "579de839-87b2-482e-bc5e-53cb499a25dc",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "4c844a58-1806-43b4-8ed9-8fde28c53a80",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        336
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "i0OpQdiKjVHo9w97",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "petermv.baah@gmail.com",
+        "subject": "Review error",
+        "emailType": "text",
+        "message": "Error review",
+        "options": {}
+      },
+      "id": "61ef0ab0-e940-49b9-b2a8-3033c0384aea",
+      "name": "Send a message",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        112
+      ],
+      "webhookId": "c4fe8b41-ed29-4659-95dd-4e53d3e21fac",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wowdcF7YQpO3kzPF",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "vK58g133kVb2pIEq",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "90f990ac-141b-410b-a3b0-0ec6f29b1fde",
+  "activeVersionId": "90f990ac-141b-410b-a3b0-0ec6f29b1fde",
+  "versionCounter": 33,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-05T14:04:20.292Z",
+      "createdAt": "2026-06-05T14:04:20.292Z",
+      "role": "workflow:owner",
+      "workflowId": "9eYOdmPK7ibLV3b8",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-06-05T14:43:04.000Z",
+    "createdAt": "2026-06-05T14:42:36.375Z",
+    "versionId": "90f990ac-141b-410b-a3b0-0ec6f29b1fde",
+    "workflowId": "9eYOdmPK7ibLV3b8",
+    "nodes": [
+      {
+        "parameters": {
+          "path": "error",
+          "options": {}
+        },
+        "id": "124f5d74-0ecc-450e-af6a-29d03a3d0ddd",
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          0,
+          112
+        ],
+        "webhookId": "708861c6-936e-4c99-b00a-575b36d19916"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.body.message }}",
+          "options": {
+            "systemMessage": "You are a helpful assistant."
+          }
+        },
+        "id": "579de839-87b2-482e-bc5e-53cb499a25dc",
+        "name": "AI Agent",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3.1,
+        "position": [
+          224,
+          112
+        ]
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "id": "4c844a58-1806-43b4-8ed9-8fde28c53a80",
+        "name": "OpenAI Chat Model",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          304,
+          336
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "i0OpQdiKjVHo9w97",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sendTo": "petermv.baah@gmail.com",
+          "subject": "Review error",
+          "emailType": "text",
+          "message": "Error review",
+          "options": {}
+        },
+        "id": "61ef0ab0-e940-49b9-b2a8-3033c0384aea",
+        "name": "Send a message",
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [
+          576,
+          112
+        ],
+        "webhookId": "c4fe8b41-ed29-4659-95dd-4e53d3e21fac",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "wowdcF7YQpO3kzPF",
+            "name": "Gmail account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version 90f990ac",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-05T14:43:04.753Z",
+        "id": 371,
+        "workflowId": "9eYOdmPK7ibLV3b8",
+        "versionId": "90f990ac-141b-410b-a3b0-0ec6f29b1fde",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

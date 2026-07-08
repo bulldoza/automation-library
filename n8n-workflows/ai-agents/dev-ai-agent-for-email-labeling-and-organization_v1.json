@@ -1,0 +1,151 @@
+{
+  "updatedAt": "2026-06-20T19:42:00.949Z",
+  "createdAt": "2026-06-11T15:31:33.444Z",
+  "id": "iSqy9p86we9jx7lb",
+  "name": "[DEV] AI Agent for Email Labeling and Organization",
+  "description": "Classifies incoming Gmail emails into work/personal/tour using gpt-4o and applies the matching Gmail label automatically.",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "id": "0097b5f7-a199-480e-90b4-6223e109366e",
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -192,
+        96
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ILVVFpuO4nK2CLOI",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "staticData": {
+    "node:Gmail Trigger": {
+      "Gmail Trigger": {
+        "lastTimeChecked": 1782171026,
+        "pendingMessageIds": [],
+        "possibleDuplicates": [
+          "19ef1abc89268bcf",
+          "19ef1afc9c180957"
+        ]
+      }
+    }
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "ce9bd74d-dcbb-4c3d-beed-74d28f2835cd",
+  "activeVersionId": "0682349c-4ffa-4b73-bc9f-5a85022d2b79",
+  "versionCounter": 1407,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-11T15:31:33.447Z",
+      "createdAt": "2026-06-11T15:31:33.447Z",
+      "role": "workflow:owner",
+      "workflowId": "iSqy9p86we9jx7lb",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-06-15T23:48:08.000Z",
+    "createdAt": "2026-06-15T23:48:07.392Z",
+    "versionId": "0682349c-4ffa-4b73-bc9f-5a85022d2b79",
+    "workflowId": "iSqy9p86we9jx7lb",
+    "nodes": [
+      {
+        "parameters": {
+          "pollTimes": {
+            "item": [
+              {
+                "mode": "everyMinute"
+              }
+            ]
+          },
+          "filters": {}
+        },
+        "id": "0097b5f7-a199-480e-90b4-6223e109366e",
+        "name": "Gmail Trigger",
+        "type": "n8n-nodes-base.gmailTrigger",
+        "typeVersion": 1.4,
+        "position": [
+          0,
+          112
+        ],
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "ILVVFpuO4nK2CLOI",
+            "name": "Gmail account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Gmail Trigger": {
+        "main": [
+          []
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version 0682349c",
+    "description": "",
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-15T23:48:08.649Z",
+        "id": 449,
+        "workflowId": "iSqy9p86we9jx7lb",
+        "versionId": "0682349c-4ffa-4b73-bc9f-5a85022d2b79",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

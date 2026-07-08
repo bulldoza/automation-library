@@ -1,0 +1,410 @@
+{
+  "updatedAt": "2026-05-15T14:17:55.301Z",
+  "createdAt": "2026-02-11T14:53:05.181Z",
+  "id": "easMW-BRHBIbE63U9vcp-",
+  "name": "Project:Form to Google Sheet",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Request",
+        "formDescription": "Send us a request",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Name"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "Email"
+            },
+            {
+              "fieldLabel": "Request",
+              "fieldType": "textarea",
+              "placeholder": "Request"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1175d9c1-7f0d-4287-929d-04bd36178f5f",
+      "name": "On form submission",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "86a89895-ec34-4f8e-9e05-0a12f77d030e"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalize all incoming keys to lowercase\nconst input = {};\nfor (const key of Object.keys($json)) {\n  input[key.toLowerCase()] = $json[key];\n}\n\n// Required fields (lowercase)\nconst required = ['name', 'email', 'request'];\n\n// Validate required fields\nfor (const field of required) {\n  if (!input[field]) {\n    throw new Error(`Missing required field: ${field}`);\n  }\n}\n\n// Return clean, normalized payload\nreturn [\n  {\n    json: {\n      name: input.name.trim(),\n      email: input.email.toLowerCase().trim(),\n      request: input.request.trim(),\n      timestamp: new Date().toISOString()\n    }\n  }\n];"
+      },
+      "id": "1858c6ef-e120-487a-8292-27445ec9e7b1",
+      "name": "Code in JavaScript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4",
+          "mode": "list",
+          "cachedResultName": "Request",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.email }}",
+            "Message": "={{ $json.request }}",
+            "Name ": "={{ $json.name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name ",
+              "displayName": "Name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a89d8b5c-0122-40b9-b3ef-aa5051ecab95",
+      "name": "Append row in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w28Da0ZQ6OfgEoon",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "2779ee49-6c12-43ae-89f4-9ea09e843e6d",
+  "activeVersionId": "b940b2cb-9ab8-4e5c-955a-4f8c92fb0782",
+  "versionCounter": 220,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-02-11T14:53:05.183Z",
+      "createdAt": "2026-02-11T14:53:05.183Z",
+      "role": "workflow:owner",
+      "workflowId": "easMW-BRHBIbE63U9vcp-",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-05-12T17:15:07.000Z",
+    "createdAt": "2026-05-06T23:48:29.671Z",
+    "versionId": "b940b2cb-9ab8-4e5c-955a-4f8c92fb0782",
+    "workflowId": "easMW-BRHBIbE63U9vcp-",
+    "nodes": [
+      {
+        "parameters": {
+          "formTitle": "Request",
+          "formDescription": "Send us a request",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "Name",
+                "placeholder": "Name"
+              },
+              {
+                "fieldLabel": "Email",
+                "fieldType": "email",
+                "placeholder": "Email"
+              },
+              {
+                "fieldLabel": "Request",
+                "fieldType": "textarea",
+                "placeholder": "Request"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.5,
+        "position": [
+          -2304,
+          -544
+        ],
+        "id": "825a8c37-812f-40ae-9267-68ee0724e290",
+        "name": "On form submission",
+        "webhookId": "d93d8c69-7f67-464c-b5d5-258d2c3a74c0"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4",
+            "mode": "list",
+            "cachedResultName": "Request",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Email": "={{ $json.Email }}",
+              "Name ": "={{ $json.Name }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "Name ",
+                "displayName": "Name ",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Email",
+                "displayName": "Email",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Message",
+                "displayName": "Message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -1856,
+          -544
+        ],
+        "id": "15a4d050-2c07-40b3-9c84-d9829442d999",
+        "name": "Append row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "w28Da0ZQ6OfgEoon",
+            "name": "Google Sheets account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "## Workflow start \n**Form to start the workflow** ",
+          "height": 176,
+          "width": 336
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -2528,
+          -576
+        ],
+        "typeVersion": 1,
+        "id": "d4cc82af-fd25-4c00-aeb3-5545baaca159",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "content": "## Google Sheets\n**Append row in sheet** ",
+          "height": 192,
+          "width": 320,
+          "color": 4
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -2192,
+          -576
+        ],
+        "typeVersion": 1,
+        "id": "de4b876b-53e4-4ada-b849-ac881bc3221c",
+        "name": "Sticky Note1"
+      },
+      {
+        "parameters": {
+          "content": "Instuctions \nSteps:\n1. Integrate the form into your site\n2. Set Google Sheets credentials\n3. Create requests sheet\n4. ???\n5. Profit",
+          "height": 192,
+          "color": 3
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -2304,
+          -816
+        ],
+        "typeVersion": 1,
+        "id": "8816319f-4fb5-47db-9877-f3840a9d0b51",
+        "name": "Sticky Note2"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Normalize all incoming keys to lowercase\nconst input = {};\nfor (const key of Object.keys($json)) {\n  input[key.toLowerCase()] = $json[key];\n}\n\n// Required fields (lowercase)\nconst required = ['name', 'email', 'request'];\n\n// Validate required fields\nfor (const field of required) {\n  if (!input[field]) {\n    throw new Error(`Missing required field: ${field}`);\n  }\n}\n\n// Return clean, normalized payload\nreturn [\n  {\n    json: {\n      name: input.name.trim(),\n      email: input.email.toLowerCase().trim(),\n      request: input.request.trim(),\n      timestamp: new Date().toISOString()\n    }\n  }\n];\n\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -2080,
+          -544
+        ],
+        "id": "10c81de0-c5d0-4e34-9b6b-e5875e16751d",
+        "name": "Code in JavaScript",
+        "retryOnFail": false
+      }
+    ],
+    "connections": {
+      "On form submission": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version b940b2cb",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-05-12T17:15:07.221Z",
+        "id": 104,
+        "workflowId": "easMW-BRHBIbE63U9vcp-",
+        "versionId": "b940b2cb-9ab8-4e5c-955a-4f8c92fb0782",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

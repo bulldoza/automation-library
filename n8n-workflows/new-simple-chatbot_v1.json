@@ -1,0 +1,93 @@
+{
+  "updatedAt": "2026-03-04T13:33:10.000Z",
+  "createdAt": "2026-03-02T15:00:24.765Z",
+  "id": "pA2W9XMdEsjScChW3qGaU",
+  "name": "New Simple Chatbot",
+  "description": null,
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatbot",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1424,
+        304
+      ],
+      "id": "c3ec0600-7436-4723-b03a-a2ec0918a413",
+      "name": "Webhook",
+      "webhookId": "0989bb45-fb68-4233-b12f-47c3e6d2f679"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1216,
+        304
+      ],
+      "id": "7f80e76c-61a6-4571-91b5-196634c65627",
+      "name": "AI Agent"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "64f4a87d-b21d-49cd-a2b8-ac76cb88e005",
+  "activeVersionId": null,
+  "versionCounter": 29,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-03-02T15:00:24.770Z",
+      "createdAt": "2026-03-02T15:00:24.770Z",
+      "role": "workflow:owner",
+      "workflowId": "pA2W9XMdEsjScChW3qGaU",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

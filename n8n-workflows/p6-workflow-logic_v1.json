@@ -1,0 +1,1179 @@
+{
+  "updatedAt": "2026-06-24T14:25:43.177Z",
+  "createdAt": "2026-06-22T21:23:34.499Z",
+  "id": "dbW8EZuU3zfWLn94",
+  "name": "P6 – Workflow Logic",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nWelcome to our IT support. Please tell us your name to get started:",
+        "options": {
+          "inputPlaceholder": "Type your name.."
+        }
+      },
+      "id": "5f0a5480-30d9-48c4-a014-9eb690839fcd",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        252
+      ],
+      "webhookId": "65757483-fcf6-4065-947d-264abbf1cbbf"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Issue:\n\n```\n{{ $('When chat message received').item.json.chatInput }}\n```",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=### **Role**\n\nYou are a text classification system for an IT helpdesk.\nYour task is to decide whether an incoming IT support request can be handled **automatically** by the chatbot or needs to be **routed to a human IT technician**.\n\n### **Default Behavior:**\n\nAssume **all requests can be automated** unless there are clear indicators that human IT support is required.\n\n### **Classification Labels:**\n\n* **Automated** — The issue is simple, routine, or can likely be resolved using self-service troubleshooting.\n* **Route to IT** — The issue is complex, high-risk, or contains keywords/topics suggesting it requires human involvement.\n\n### **Route to IT** if the request includes **Keywords or topics** such as:\n\n   * *hardware*, *broken*, *damaged*, *replacement*, *repair*\n   * *network down*, *server*, *outage*, *system crash*\n   * *admin rights*, *installation*, *permissions*, *access denied*\n   * *security*, *breach*, *virus*, *phishing*, *data loss*\n   * *urgent*, *critical*, *can't work*, *system not starting*\n   * *new equipment*, *device setup*, *hardware request*\n   * *user demands human assistance* \n\n### **Otherwise:**\n\nClassify as **Automated** — including typical Windows, Office app, network, or login troubleshooting that follows standard steps."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "ac685e6b-ac11-4c81-ad18-94ec33e1bdbd",
+      "name": "Router",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        224,
+        252
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "a73141a0-8de3-4b4a-952d-8541f6de1dbc",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        232,
+        476
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "i0OpQdiKjVHo9w97",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"prio\": \"Automated\"\n}"
+      },
+      "id": "8cef2dc7-952c-4b0b-b4e1-1de8e0bd4577",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        360,
+        476
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1aa1625c-3a2b-4e9d-8d7c-d8207e03d6f9",
+              "leftValue": "={{ $json.output.prio }}",
+              "rightValue": "Automated",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "62a34989-4888-4ace-8a58-792b4a10def3",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        252
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When chat message received').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "=### **Role**\n\nYou are an **IT Support Chatbot** for a corporate helpdesk.\nYour role is to provide **first-level technical support** to employees who use **Windows** and **Microsoft Office applications** (Word, Excel, Outlook, PowerPoint, Teams, etc.).\n\n### **Your Objectives:**\n1. Ask the user about their name\n2. Understand the user's problem clearly.\n3. Once the user provided their name and problem , provide **immediate troubleshooting steps** or quick answers when possible. Do not provide help until you know the name and problem.\n\n### **Response Guidelines:**\n* Use short paragraphs or numbered steps.\n* When suggesting commands or settings, write them exactly as they appear in Windows or Office.\n* Ask follow-up questions as needed.\n* If you don't know the answer, say: \"Sorry, I can't help with that.\"\n\n### **Example Response Style:**\n\n**User:** \"I can't open Excel files.\"\n**Chatbot:**\n\n> Let's try a quick fix:\n>\n> 1. Close all Excel windows.\n> 2. Press **Windows + R**, type `excel /safe`, and press **Enter** to open Excel in Safe Mode.\n> 3. Try opening the file again.\n>\n> Did that work? If not, we can check add-ins next or escalate to IT support."
+        }
+      },
+      "id": "25c7b406-1a89-40ed-bdca-83f754d6e5b2",
+      "name": "Chatbot",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "26917427-333a-499b-816e-3968db3b4ab4",
+      "name": "OpenAI Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        808,
+        224
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "i0OpQdiKjVHo9w97",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "id": "eb75b89b-f238-4a2e-8af8-d99cd65b2a36",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        936,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "267dcef0-9799-47ff-b11a-dca92d81f83b",
+              "name": "ID",
+              "value": "={{ $now.ts.toString(36).toUpperCase() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b443188f-3f29-4a33-a45d-b720a168d3ca",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        864,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When chat message received').item.json.chatInput }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Create a ticket given the message history and a response to the user (letting them now that their request has been forwarded to IT and they'll be in touch soon) using the following fields:\n\n- Name: <name of the user>\n- Issue description: <summary of the issue, 1-2 sentences max.>\n- Ticket ID: {{ $json.ID }}\n- Response: <personal response, 1 sentence.>"
+        }
+      },
+      "id": "0c1d3b7c-4046-437d-b901-99a164b05233",
+      "name": "Ticket Writer",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1152,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "cf24f400-6ade-494b-8f19-004ad318070f",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1160,
+        624
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "i0OpQdiKjVHo9w97",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Name\": \"Tobias\",\n\t\"Description\": \"My laptop fell down\",\n    \"Response\": \"Sorry to hear that! IT will be in touch shortly!\"\n}"
+      },
+      "id": "19c4a3a8-0393-4192-9661-35b04c7217e6",
+      "name": "Structured Output Parser2",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1288,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Issue:\n\n```\n{{ $('Ticket Writer').item.json.output.Description }}\n```",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=**Role**\n\nYou are a text classification system for an IT support helpdesk.\nYour task is to read an incoming support ticket and classify it as either **\"Urgent\"** or **\"Not urgent\"** based on the content.\n\n### Classification Rules:\n\n* **Urgent** if the ticket describes:\n\n  * Complete system or network outages.\n  * Inability to perform critical work tasks.\n  * Security breaches or data loss.\n  * Hardware failure affecting essential operations.\n  * Issues impacting multiple users or key business functions.\n  * Time-sensitive problems needing immediate attention.\n\n* **Not urgent** if the ticket describes:\n\n  * Minor bugs or usability issues.\n  * Requests for information, training, or feature changes.\n  * Scheduled maintenance or non-critical updates.\n  * Problems with available workarounds.\n  * Single-user issues not blocking essential tasks.\n\n### Output Format:\n\nRespond **only** with one of the following labels:\n\n* `Urgent`\n* `Not urgent`\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "ffb28958-030f-48cc-a629-390ae2cd712f",
+      "name": "Urgency",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1504,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "66ff55b4-62b4-4553-a417-3381d89bc08c",
+      "name": "OpenAI Chat Model3",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1512,
+        624
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "i0OpQdiKjVHo9w97",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"prio\": \"Urgent\"\n}"
+      },
+      "id": "709e48a7-1124-4447-9ba1-7e68dcd4be8a",
+      "name": "Structured Output Parser1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1640,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "bulldoza",
+          "mode": "list",
+          "cachedResultName": "bulldoza"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-ai-bootcamp",
+          "mode": "list",
+          "cachedResultName": "n8n-ai-bootcamp"
+        },
+        "filePath": "=day 1/project 6/tickets/{{ $('Edit Fields').item.json.ID }}.txt",
+        "fileContent": "=Prio: {{ $json.output.prio }}\n\nName: {{ $('Ticket Writer').item.json.output.Name }}\n\nSubmitted: {{ $now }}\n\nDescription:\n{{ $('Ticket Writer').item.json.output.Description }}",
+        "commitMessage": "new ticket"
+      },
+      "id": "fb3916c5-d019-478a-8430-9b737510070d",
+      "name": "Create a file",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        1856,
+        400
+      ],
+      "webhookId": "da60cac2-7b82-41f2-ae10-9a61f1c1785a",
+      "credentials": {
+        "githubApi": {
+          "id": "Gz7aNrcVXGc1r3Qf",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1f959a5b-723b-4572-a3ff-f939cca69a85",
+              "name": "output",
+              "value": "={{ $('Ticket Writer').item.json.output.Response }}\n\nYour Ticket ID is: {{ $('Edit Fields').item.json.ID }}.\n\nThis chat will now be closed. \n\nHave a great day!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "52669565-057c-48a0-9c00-a0e8300171e8",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2080,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Router",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Router",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Chatbot",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Chatbot",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Chatbot",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Ticket Writer",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Ticket Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ticket Writer": {
+      "main": [
+        [
+          {
+            "node": "Urgency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Ticket Writer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Ticket Writer",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Urgency": {
+      "main": [
+        [
+          {
+            "node": "Create a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Urgency",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Urgency",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "695c789d-58a3-41a2-a341-da07604ecbd9",
+  "activeVersionId": "695c789d-58a3-41a2-a341-da07604ecbd9",
+  "versionCounter": 47,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-22T21:23:34.501Z",
+      "createdAt": "2026-06-22T21:23:34.501Z",
+      "role": "workflow:owner",
+      "workflowId": "dbW8EZuU3zfWLn94",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2026-06-20T18:04:11.956Z",
+      "createdAt": "2026-06-20T18:04:11.956Z",
+      "id": "6ByrLwhmwxnr43sx",
+      "name": "O'Reilly n8n"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2026-06-24T14:29:04.000Z",
+    "createdAt": "2026-06-24T14:25:43.178Z",
+    "versionId": "695c789d-58a3-41a2-a341-da07604ecbd9",
+    "workflowId": "dbW8EZuU3zfWLn94",
+    "nodes": [
+      {
+        "parameters": {
+          "public": true,
+          "initialMessages": "Hi there! 👋\nWelcome to our IT support. Please tell us your name to get started:",
+          "options": {
+            "inputPlaceholder": "Type your name.."
+          }
+        },
+        "id": "5f0a5480-30d9-48c4-a014-9eb690839fcd",
+        "name": "When chat message received",
+        "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "typeVersion": 1.3,
+        "position": [
+          0,
+          252
+        ],
+        "webhookId": "65757483-fcf6-4065-947d-264abbf1cbbf"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Issue:\n\n```\n{{ $('When chat message received').item.json.chatInput }}\n```",
+          "hasOutputParser": true,
+          "messages": {
+            "messageValues": [
+              {
+                "message": "=### **Role**\n\nYou are a text classification system for an IT helpdesk.\nYour task is to decide whether an incoming IT support request can be handled **automatically** by the chatbot or needs to be **routed to a human IT technician**.\n\n### **Default Behavior:**\n\nAssume **all requests can be automated** unless there are clear indicators that human IT support is required.\n\n### **Classification Labels:**\n\n* **Automated** — The issue is simple, routine, or can likely be resolved using self-service troubleshooting.\n* **Route to IT** — The issue is complex, high-risk, or contains keywords/topics suggesting it requires human involvement.\n\n### **Route to IT** if the request includes **Keywords or topics** such as:\n\n   * *hardware*, *broken*, *damaged*, *replacement*, *repair*\n   * *network down*, *server*, *outage*, *system crash*\n   * *admin rights*, *installation*, *permissions*, *access denied*\n   * *security*, *breach*, *virus*, *phishing*, *data loss*\n   * *urgent*, *critical*, *can't work*, *system not starting*\n   * *new equipment*, *device setup*, *hardware request*\n   * *user demands human assistance* \n\n### **Otherwise:**\n\nClassify as **Automated** — including typical Windows, Office app, network, or login troubleshooting that follows standard steps."
+              }
+            ]
+          },
+          "batching": {}
+        },
+        "id": "ac685e6b-ac11-4c81-ad18-94ec33e1bdbd",
+        "name": "Router",
+        "type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "typeVersion": 1.7,
+        "position": [
+          224,
+          252
+        ]
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list",
+            "cachedResultName": "gpt-4o-mini"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "id": "a73141a0-8de3-4b4a-952d-8541f6de1dbc",
+        "name": "OpenAI Chat Model",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          232,
+          476
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "i0OpQdiKjVHo9w97",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsonSchemaExample": "{\n\t\"prio\": \"Automated\"\n}"
+        },
+        "id": "8cef2dc7-952c-4b0b-b4e1-1de8e0bd4577",
+        "name": "Structured Output Parser",
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          360,
+          476
+        ]
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "1aa1625c-3a2b-4e9d-8d7c-d8207e03d6f9",
+                "leftValue": "={{ $json.output.prio }}",
+                "rightValue": "Automated",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "id": "62a34989-4888-4ace-8a58-792b4a10def3",
+        "name": "If",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          576,
+          252
+        ]
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $('When chat message received').item.json.chatInput }}",
+          "options": {
+            "systemMessage": "=### **Role**\n\nYou are an **IT Support Chatbot** for a corporate helpdesk.\nYour role is to provide **first-level technical support** to employees who use **Windows** and **Microsoft Office applications** (Word, Excel, Outlook, PowerPoint, Teams, etc.).\n\n### **Your Objectives:**\n1. Ask the user about their name\n2. Understand the user's problem clearly.\n3. Once the user provided their name and problem , provide **immediate troubleshooting steps** or quick answers when possible. Do not provide help until you know the name and problem.\n\n### **Response Guidelines:**\n* Use short paragraphs or numbered steps.\n* When suggesting commands or settings, write them exactly as they appear in Windows or Office.\n* Ask follow-up questions as needed.\n* If you don't know the answer, say: \"Sorry, I can't help with that.\"\n\n### **Example Response Style:**\n\n**User:** \"I can't open Excel files.\"\n**Chatbot:**\n\n> Let's try a quick fix:\n>\n> 1. Close all Excel windows.\n> 2. Press **Windows + R**, type `excel /safe`, and press **Enter** to open Excel in Safe Mode.\n> 3. Try opening the file again.\n>\n> Did that work? If not, we can check add-ins next or escalate to IT support."
+          }
+        },
+        "id": "25c7b406-1a89-40ed-bdca-83f754d6e5b2",
+        "name": "Chatbot",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.2,
+        "position": [
+          800,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list",
+            "cachedResultName": "gpt-4o-mini"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "id": "26917427-333a-499b-816e-3968db3b4ab4",
+        "name": "OpenAI Chat Model2",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          808,
+          224
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "i0OpQdiKjVHo9w97",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "contextWindowLength": 10
+        },
+        "id": "eb75b89b-f238-4a2e-8af8-d99cd65b2a36",
+        "name": "Simple Memory",
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          936,
+          224
+        ]
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "267dcef0-9799-47ff-b11a-dca92d81f83b",
+                "name": "ID",
+                "value": "={{ $now.ts.toString(36).toUpperCase() }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "b443188f-3f29-4a33-a45d-b720a168d3ca",
+        "name": "Edit Fields",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          864,
+          400
+        ]
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $('When chat message received').item.json.chatInput }}",
+          "hasOutputParser": true,
+          "options": {
+            "systemMessage": "=Create a ticket given the message history and a response to the user (letting them now that their request has been forwarded to IT and they'll be in touch soon) using the following fields:\n\n- Name: <name of the user>\n- Issue description: <summary of the issue, 1-2 sentences max.>\n- Ticket ID: {{ $json.ID }}\n- Response: <personal response, 1 sentence.>"
+          }
+        },
+        "id": "0c1d3b7c-4046-437d-b901-99a164b05233",
+        "name": "Ticket Writer",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.2,
+        "position": [
+          1152,
+          400
+        ]
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list",
+            "cachedResultName": "gpt-4o-mini"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "id": "cf24f400-6ade-494b-8f19-004ad318070f",
+        "name": "OpenAI Chat Model1",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          1160,
+          624
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "i0OpQdiKjVHo9w97",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsonSchemaExample": "{\n\t\"Name\": \"Tobias\",\n\t\"Description\": \"My laptop fell down\",\n    \"Response\": \"Sorry to hear that! IT will be in touch shortly!\"\n}"
+        },
+        "id": "19c4a3a8-0393-4192-9661-35b04c7217e6",
+        "name": "Structured Output Parser2",
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          1288,
+          624
+        ]
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Issue:\n\n```\n{{ $('Ticket Writer').item.json.output.Description }}\n```",
+          "hasOutputParser": true,
+          "messages": {
+            "messageValues": [
+              {
+                "message": "=**Role**\n\nYou are a text classification system for an IT support helpdesk.\nYour task is to read an incoming support ticket and classify it as either **\"Urgent\"** or **\"Not urgent\"** based on the content.\n\n### Classification Rules:\n\n* **Urgent** if the ticket describes:\n\n  * Complete system or network outages.\n  * Inability to perform critical work tasks.\n  * Security breaches or data loss.\n  * Hardware failure affecting essential operations.\n  * Issues impacting multiple users or key business functions.\n  * Time-sensitive problems needing immediate attention.\n\n* **Not urgent** if the ticket describes:\n\n  * Minor bugs or usability issues.\n  * Requests for information, training, or feature changes.\n  * Scheduled maintenance or non-critical updates.\n  * Problems with available workarounds.\n  * Single-user issues not blocking essential tasks.\n\n### Output Format:\n\nRespond **only** with one of the following labels:\n\n* `Urgent`\n* `Not urgent`\n"
+              }
+            ]
+          },
+          "batching": {}
+        },
+        "id": "ffb28958-030f-48cc-a629-390ae2cd712f",
+        "name": "Urgency",
+        "type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "typeVersion": 1.7,
+        "position": [
+          1504,
+          400
+        ]
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list",
+            "cachedResultName": "gpt-4o-mini"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "id": "66ff55b4-62b4-4553-a417-3381d89bc08c",
+        "name": "OpenAI Chat Model3",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          1512,
+          624
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "i0OpQdiKjVHo9w97",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsonSchemaExample": "{\n\t\"prio\": \"Urgent\"\n}"
+        },
+        "id": "709e48a7-1124-4447-9ba1-7e68dcd4be8a",
+        "name": "Structured Output Parser1",
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          1640,
+          624
+        ]
+      },
+      {
+        "parameters": {
+          "resource": "file",
+          "owner": {
+            "__rl": true,
+            "value": "bulldoza",
+            "mode": "list",
+            "cachedResultName": "bulldoza"
+          },
+          "repository": {
+            "__rl": true,
+            "value": "n8n-ai-bootcamp",
+            "mode": "list",
+            "cachedResultName": "n8n-ai-bootcamp"
+          },
+          "filePath": "=day 1/project 6/tickets/{{ $('Edit Fields').item.json.ID }}.txt",
+          "fileContent": "=Prio: {{ $json.output.prio }}\n\nName: {{ $('Ticket Writer').item.json.output.Name }}\n\nSubmitted: {{ $now }}\n\nDescription:\n{{ $('Ticket Writer').item.json.output.Description }}",
+          "commitMessage": "new ticket"
+        },
+        "id": "fb3916c5-d019-478a-8430-9b737510070d",
+        "name": "Create a file",
+        "type": "n8n-nodes-base.github",
+        "typeVersion": 1.1,
+        "position": [
+          1856,
+          400
+        ],
+        "webhookId": "da60cac2-7b82-41f2-ae10-9a61f1c1785a",
+        "credentials": {
+          "githubApi": {
+            "id": "Gz7aNrcVXGc1r3Qf",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "1f959a5b-723b-4572-a3ff-f939cca69a85",
+                "name": "output",
+                "value": "={{ $('Ticket Writer').item.json.output.Response }}\n\nYour Ticket ID is: {{ $('Edit Fields').item.json.ID }}.\n\nThis chat will now be closed. \n\nHave a great day!",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "52669565-057c-48a0-9c00-a0e8300171e8",
+        "name": "Edit Fields1",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          2080,
+          400
+        ]
+      }
+    ],
+    "connections": {
+      "When chat message received": {
+        "main": [
+          [
+            {
+              "node": "Router",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Router": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Router",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Router",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Chatbot",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model2": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Chatbot",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "Chatbot",
+              "type": "ai_memory",
+              "index": 0
+            },
+            {
+              "node": "Ticket Writer",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Ticket Writer",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Ticket Writer": {
+        "main": [
+          [
+            {
+              "node": "Urgency",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model1": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Ticket Writer",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser2": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Ticket Writer",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Urgency": {
+        "main": [
+          [
+            {
+              "node": "Create a file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model3": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Urgency",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser1": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Urgency",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Create a file": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version 695c789d",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-24T14:29:04.374Z",
+        "id": 510,
+        "workflowId": "dbW8EZuU3zfWLn94",
+        "versionId": "695c789d-58a3-41a2-a341-da07604ecbd9",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "updatedAt": "2026-06-11T14:51:01.488Z",
+  "createdAt": "2026-06-11T14:43:25.888Z",
+  "id": "hHKFBJZ2NFlDWbjz",
+  "name": "Workflow test",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "staticData": {
+    "node:Gmail Trigger": {
+      "Gmail Trigger": {
+        "lastTimeChecked": 1781190450,
+        "possibleDuplicates": [
+          "19eb73962d78c684",
+          "19eb7392aae3cce2"
+        ]
+      }
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "ec3c9fb8-e1d7-4403-a2c8-b4350eb57edf",
+  "activeVersionId": "d0394829-ea12-4ca3-acb2-54f555522eb0",
+  "versionCounter": 22,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-11T14:43:25.890Z",
+      "createdAt": "2026-06-11T14:43:25.890Z",
+      "role": "workflow:owner",
+      "workflowId": "hHKFBJZ2NFlDWbjz",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-06-11T14:48:23.000Z",
+    "createdAt": "2026-06-11T14:48:22.495Z",
+    "versionId": "d0394829-ea12-4ca3-acb2-54f555522eb0",
+    "workflowId": "hHKFBJZ2NFlDWbjz",
+    "nodes": [
+      {
+        "parameters": {
+          "pollTimes": {
+            "item": [
+              {
+                "mode": "everyMinute"
+              }
+            ]
+          },
+          "filters": {}
+        },
+        "type": "n8n-nodes-base.gmailTrigger",
+        "typeVersion": 1.4,
+        "position": [
+          -320,
+          -80
+        ],
+        "id": "f9bcb3cc-b165-4bd2-807b-6f05be5a7291",
+        "name": "Gmail Trigger",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "wowdcF7YQpO3kzPF",
+            "name": "Gmail account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sendTo": "petermv.baah@gmail.com",
+          "subject": "Hello",
+          "message": "This is my time",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [
+          -112,
+          -80
+        ],
+        "id": "883e31f5-3edf-4258-a234-6bce8acaa91f",
+        "name": "Send a message",
+        "webhookId": "9bd854c4-a4ce-4859-87a6-c05208bd8cde",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "wowdcF7YQpO3kzPF",
+            "name": "Gmail account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Gmail Trigger": {
+        "main": [
+          [
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version d0394829",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-11T14:48:23.852Z",
+        "id": 384,
+        "workflowId": "hHKFBJZ2NFlDWbjz",
+        "versionId": "d0394829-ea12-4ca3-acb2-54f555522eb0",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      },
+      {
+        "createdAt": "2026-06-11T14:50:01.110Z",
+        "id": 386,
+        "workflowId": "hHKFBJZ2NFlDWbjz",
+        "versionId": "d0394829-ea12-4ca3-acb2-54f555522eb0",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      },
+      {
+        "createdAt": "2026-06-11T14:50:00.792Z",
+        "id": 385,
+        "workflowId": "hHKFBJZ2NFlDWbjz",
+        "versionId": "d0394829-ea12-4ca3-acb2-54f555522eb0",
+        "event": "deactivated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

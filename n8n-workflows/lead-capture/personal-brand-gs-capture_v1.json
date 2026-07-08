@@ -1,0 +1,227 @@
+{
+  "updatedAt": "2026-03-24T00:34:43.000Z",
+  "createdAt": "2026-03-19T19:33:21.607Z",
+  "id": "pPLeZ6kDOqddy0ltln4fZ",
+  "name": "Personal Brand- GS capture",
+  "description": null,
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Request",
+        "formDescription": "Send me a request",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Name"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "email"
+            },
+            {
+              "fieldLabel": "Request",
+              "fieldType": "textarea",
+              "placeholder": "Request"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -512,
+        184
+      ],
+      "id": "ec5a2705-3989-4870-a460-7265a8457d41",
+      "name": "On form submission",
+      "webhookId": "edb3e64a-b12e-42b2-8b03-846c4f515dd5",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1tIEFth7ZH4wuclTs7GF-1OSuCEBRukd3snLIiXPeNzo",
+          "mode": "list",
+          "cachedResultName": "Personal Brand- AI Consultant",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tIEFth7ZH4wuclTs7GF-1OSuCEBRukd3snLIiXPeNzo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Baah",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tIEFth7ZH4wuclTs7GF-1OSuCEBRukd3snLIiXPeNzo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "Email": "={{ $json.Email }}",
+            "Request": "={{ $json.Request }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Request",
+              "displayName": "Request",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -64,
+        88
+      ],
+      "id": "48086fd1-69d9-4426-ba32-a7461243d033",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BilvEw7WltNshgzj",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalize all incoming keys to lowercase\nconst input = {};\nfor (const key of Object.keys($json)) {\n  input[key.toLowerCase()] = $json[key];\n}\n\n// Required fields (lowercase)\nconst required = ['name', 'email', 'request'];\n\n// Validate required fields\nfor (const field of required) {\n  if (!input[field]) {\n    throw new Error(`Missing required field: ${field}`);\n  }\n}\n\n// Return clean, normalized payload\nreturn [\n  {\n    json: {\n      name: input.name.trim(),\n      email: input.email.toLowerCase().trim(),\n      request: input.request.trim(),\n      timestamp: new Date().toISOString()\n    }\n  }\n];\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -288,
+        16
+      ],
+      "id": "6761250c-2424-4bf9-82f6-87eade71cc27",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Baah-lead-contact",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -512,
+        -32
+      ],
+      "id": "2840bdea-4443-441f-b25c-d67c2654eeb4",
+      "name": "Webhook",
+      "webhookId": "f5967b42-61df-4184-9fbd-e640b09b4429"
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "1f84b2a4-5da4-477c-962f-6f14a89d9b51",
+  "activeVersionId": null,
+  "versionCounter": 107,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-03-19T19:33:21.610Z",
+      "createdAt": "2026-03-19T19:33:21.610Z",
+      "role": "workflow:owner",
+      "workflowId": "pPLeZ6kDOqddy0ltln4fZ",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

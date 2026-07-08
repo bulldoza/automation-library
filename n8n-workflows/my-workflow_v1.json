@@ -1,0 +1,62 @@
+{
+  "updatedAt": "2026-03-02T17:38:15.000Z",
+  "createdAt": "2026-02-28T15:57:36.566Z",
+  "id": "BPFkC4V0sDIj3uZ55VVoo",
+  "name": "My workflow",
+  "description": null,
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -288,
+        -80
+      ],
+      "id": "4fcc1bdc-27ad-425b-9c84-c4670435325a",
+      "name": "On form submission",
+      "webhookId": "25b9da36-91e5-484d-ad7d-b552ef5536f3"
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "f31bbada-a92c-45b6-b65d-2e78ea87936c",
+  "activeVersionId": null,
+  "versionCounter": 6,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-02-28T15:57:36.571Z",
+      "createdAt": "2026-02-28T15:57:36.571Z",
+      "role": "workflow:owner",
+      "workflowId": "BPFkC4V0sDIj3uZ55VVoo",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

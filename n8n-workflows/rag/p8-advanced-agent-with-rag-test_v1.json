@@ -1,0 +1,521 @@
+{
+  "updatedAt": "2026-07-01T20:49:09.572Z",
+  "createdAt": "2026-06-29T16:59:26.831Z",
+  "id": "l2Jv5TrxxvCHEMeR",
+  "name": "P8 - Advanced Agent with RAG-- TEST",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "e9b52139-ad6a-4a67-bffc-4c04281a0022",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "owner": {
+          "__rl": true,
+          "value": "bulldoza",
+          "mode": "list",
+          "cachedResultName": "bulldoza",
+          "cachedResultUrl": "https://github.com/bulldoza"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-ai-bootcamp",
+          "mode": "list",
+          "cachedResultName": "n8n-ai-bootcamp",
+          "cachedResultUrl": "https://github.com/bulldoza/n8n-ai-bootcamp"
+        },
+        "filePath": "=day 2/project 8/documents/"
+      },
+      "id": "59f5ad4e-0abd-44af-b2de-794f5211ffd6",
+      "name": "List files",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        112
+      ],
+      "webhookId": "02e9fa1f-bab5-4ed8-85ca-d0235954224a",
+      "credentials": {
+        "githubApi": {
+          "id": "Gz7aNrcVXGc1r3Qf",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "bulldoza",
+          "mode": "list",
+          "cachedResultName": "bulldoza",
+          "cachedResultUrl": "https://github.com/bulldoza"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-ai-bootcamp",
+          "mode": "list",
+          "cachedResultName": "n8n-ai-bootcamp",
+          "cachedResultUrl": "https://github.com/bulldoza/n8n-ai-bootcamp"
+        },
+        "filePath": "={{ $json.path }}",
+        "additionalParameters": {}
+      },
+      "id": "ff14e0ad-ff59-424b-adab-ca260a50affb",
+      "name": "Get a file",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        112
+      ],
+      "webhookId": "418b0328-57ae-4d06-b918-21363d9ceb71",
+      "credentials": {
+        "githubApi": {
+          "id": "Gz7aNrcVXGc1r3Qf",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "embeddingBatchSize": 20,
+        "options": {
+          "clearNamespace": true,
+          "pineconeNamespace": "it"
+        }
+      },
+      "id": "07580f68-457d-412f-95e7-48c4ff4d2c81",
+      "name": "Pinecone Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        672,
+        112
+      ],
+      "credentials": {
+        "pineconeApi": {
+          "id": "6edVpSC0dEbmrlNy",
+          "name": "Pinecone account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "dimensions": 512
+        }
+      },
+      "id": "f5c72c16-22f9-41ae-91bd-3d3dce3c62e6",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        624,
+        304
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "i0OpQdiKjVHo9w97",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {
+          "splitPages": true,
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "file_name",
+                "value": "={{ $json.name }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "636940eb-14dc-4bfa-a996-42393bfdfe6e",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        816,
+        336
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "List files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List files": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "31fd171f-4473-40f4-bdbf-1cd076798822",
+  "activeVersionId": "c777804d-95e4-4939-b297-a9478f088f91",
+  "versionCounter": 77,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-29T16:59:26.835Z",
+      "createdAt": "2026-06-29T16:59:26.835Z",
+      "role": "workflow:owner",
+      "workflowId": "l2Jv5TrxxvCHEMeR",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-06-29T17:55:28.000Z",
+    "createdAt": "2026-06-29T17:55:15.455Z",
+    "versionId": "c777804d-95e4-4939-b297-a9478f088f91",
+    "workflowId": "l2Jv5TrxxvCHEMeR",
+    "nodes": [
+      {
+        "parameters": {
+          "resource": "file",
+          "operation": "list",
+          "owner": {
+            "__rl": true,
+            "value": "bulldoza",
+            "mode": "list",
+            "cachedResultName": "bulldoza",
+            "cachedResultUrl": "https://github.com/bulldoza"
+          },
+          "repository": {
+            "__rl": true,
+            "value": "n8n-ai-bootcamp",
+            "mode": "list",
+            "cachedResultName": "n8n-ai-bootcamp",
+            "cachedResultUrl": "https://github.com/bulldoza/n8n-ai-bootcamp"
+          },
+          "filePath": "=day 2/project 8/documents/"
+        },
+        "type": "n8n-nodes-base.github",
+        "typeVersion": 1.1,
+        "position": [
+          -64,
+          -32
+        ],
+        "id": "fbcd16a5-9539-4f72-b8ee-da3ebe879b51",
+        "name": "List files",
+        "webhookId": "7fef002c-aefd-403d-a90b-9433ff338382",
+        "credentials": {
+          "githubApi": {
+            "id": "Gz7aNrcVXGc1r3Qf",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "insert",
+          "pineconeIndex": {
+            "__rl": true,
+            "value": "document",
+            "mode": "list",
+            "cachedResultName": "document"
+          },
+          "options": {
+            "pineconeNamespace": "IT support chatbot"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "typeVersion": 1.3,
+        "position": [
+          384,
+          -32
+        ],
+        "id": "b2933c17-080d-4cd4-9c47-6bc65c013913",
+        "name": "Pinecone Vector Store",
+        "credentials": {
+          "pineconeApi": {
+            "id": "6edVpSC0dEbmrlNy",
+            "name": "Pinecone account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "file",
+          "operation": "get",
+          "owner": {
+            "__rl": true,
+            "value": "bulldoza",
+            "mode": "list",
+            "cachedResultName": "bulldoza",
+            "cachedResultUrl": "https://github.com/bulldoza"
+          },
+          "repository": {
+            "__rl": true,
+            "value": "n8n-ai-bootcamp",
+            "mode": "list",
+            "cachedResultName": "n8n-ai-bootcamp",
+            "cachedResultUrl": "https://github.com/bulldoza/n8n-ai-bootcamp"
+          },
+          "filePath": "={{ $json.path }}",
+          "additionalParameters": {}
+        },
+        "type": "n8n-nodes-base.github",
+        "typeVersion": 1.1,
+        "position": [
+          160,
+          -32
+        ],
+        "id": "8a576c66-5304-4dca-a21a-01c1628e6884",
+        "name": "Get a file",
+        "webhookId": "5fc3f40f-87ab-4a2e-85ff-0cece46a59f5",
+        "credentials": {
+          "githubApi": {
+            "id": "Gz7aNrcVXGc1r3Qf",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          352,
+          176
+        ],
+        "id": "56b61bf3-430e-4cd3-b32e-66ad773f1049",
+        "name": "Embeddings OpenAI",
+        "credentials": {
+          "openAiApi": {
+            "id": "i0OpQdiKjVHo9w97",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "dataType": "binary",
+          "options": {
+            "splitPages": true,
+            "metadata": {
+              "metadataValues": [
+                {
+                  "name": "file_name",
+                  "value": "={{ $json.name }}"
+                }
+              ]
+            }
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "typeVersion": 1.1,
+        "position": [
+          528,
+          176
+        ],
+        "id": "b31aeed7-6348-4dce-85e2-491055ad652f",
+        "name": "Default Data Loader"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "typeVersion": 1.4,
+        "position": [
+          -256,
+          16
+        ],
+        "id": "bf1aab33-3b94-43a2-928b-44af284f1ea8",
+        "name": "When chat message received",
+        "webhookId": "f38fdd7b-754d-4cc1-aabe-f8e94f94b9b4"
+      }
+    ],
+    "connections": {
+      "List files": {
+        "main": [
+          [
+            {
+              "node": "Get a file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Embeddings OpenAI": {
+        "ai_embedding": [
+          [
+            {
+              "node": "Pinecone Vector Store",
+              "type": "ai_embedding",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get a file": {
+        "main": [
+          [
+            {
+              "node": "Pinecone Vector Store",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Default Data Loader": {
+        "ai_document": [
+          [
+            {
+              "node": "Pinecone Vector Store",
+              "type": "ai_document",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When chat message received": {
+        "main": [
+          [
+            {
+              "node": "List files",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version c777804d",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-29T17:55:28.184Z",
+        "id": 564,
+        "workflowId": "l2Jv5TrxxvCHEMeR",
+        "versionId": "c777804d-95e4-4939-b297-a9478f088f91",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      },
+      {
+        "createdAt": "2026-06-29T17:59:56.799Z",
+        "id": 566,
+        "workflowId": "l2Jv5TrxxvCHEMeR",
+        "versionId": "c777804d-95e4-4939-b297-a9478f088f91",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      },
+      {
+        "createdAt": "2026-06-29T17:59:56.780Z",
+        "id": 565,
+        "workflowId": "l2Jv5TrxxvCHEMeR",
+        "versionId": "c777804d-95e4-4939-b297-a9478f088f91",
+        "event": "deactivated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

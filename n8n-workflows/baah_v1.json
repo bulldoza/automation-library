@@ -1,0 +1,450 @@
+{
+  "updatedAt": "2026-06-09T18:29:17.482Z",
+  "createdAt": "2026-03-09T22:38:17.000Z",
+  "id": "HMGaWsRcrGEop4sPBopgI",
+  "name": "Baah",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "website-lead-contact",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -656,
+        -288
+      ],
+      "id": "7d06a149-2ed3-49ab-b71e-9e878bf7da03",
+      "name": "Webhook",
+      "webhookId": "39668f34-490a-4743-81e5-3797d1b14db2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4",
+          "mode": "list",
+          "cachedResultName": "AI Consultant",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name ": "={{ $json.body.name }}",
+            "Email": "={{ $json.body.email }}",
+            "Message": "={{ $json.body.message }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name ",
+              "displayName": "Name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -432,
+        -224
+      ],
+      "id": "54ddd691-dfc9-4160-85b3-a208162767a6",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w28Da0ZQ6OfgEoon",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "petermv.baah@gmail.com",
+        "subject": "New  Lead",
+        "message": "=<div style=\"font-family: sans-serif; line-height: 1.6; color: #333;\">\n  <h2 style=\"color: #2a5fb2; border-bottom: 2px solid #eee; padding-bottom: 10px;\">🚀 New Website Lead</h2>\n  \n  <p><strong>Name:</strong> {{ $json.body.name }}</p>\n  <p><strong>Email:</strong> {{ $json.email }}</p>\n  \n  <div style=\"background: #f4f7f6; padding: 15px; border-left: 5px solid #2a5fb2; border-radius: 4px;\">\n    <strong>Message:</strong><br>\n    {{ $json.message }}\n  </div>\n\n  <p style=\"font-size: 12px; color: #888; margin-top: 25px;\">\n    This lead was automatically saved to your Google Sheet.\n  </p>\n</div>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": ""
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -224,
+        -384
+      ],
+      "id": "94eb56e2-e2ed-4013-aa74-32f34b576c42",
+      "name": "Send a message",
+      "webhookId": "cc6ef3ca-4e25-4572-aa39-44777a958236",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wowdcF7YQpO3kzPF",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "86a87fa4-da58-4003-9d54-38656d57c802",
+              "name": "body.name",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "7fd60984-d94c-4d98-b91c-4dd5cd51b80d",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "2dbffaa1-e4d5-4440-8f3d-7702238f987f",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -432,
+        -384
+      ],
+      "id": "f35f87dd-c646-4750-b473-9deb40311f99",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "vK58g133kVb2pIEq",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "879544ee-5f83-4ca9-b2bc-f011fc0d465f",
+  "activeVersionId": "879544ee-5f83-4ca9-b2bc-f011fc0d465f",
+  "versionCounter": 227,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-03-09T22:38:17.004Z",
+      "createdAt": "2026-03-09T22:38:17.004Z",
+      "role": "workflow:owner",
+      "workflowId": "HMGaWsRcrGEop4sPBopgI",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-06-09T18:29:29.000Z",
+    "createdAt": "2026-06-09T18:29:17.483Z",
+    "versionId": "879544ee-5f83-4ca9-b2bc-f011fc0d465f",
+    "workflowId": "HMGaWsRcrGEop4sPBopgI",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "website-lead-contact",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -656,
+          -288
+        ],
+        "id": "7d06a149-2ed3-49ab-b71e-9e878bf7da03",
+        "name": "Webhook",
+        "webhookId": "39668f34-490a-4743-81e5-3797d1b14db2"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4",
+            "mode": "list",
+            "cachedResultName": "AI Consultant",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kdx3O1YpGHNu0aHLXfKdFHmyh0VEZIgGN12LoTWraL4/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Name ": "={{ $json.body.name }}",
+              "Email": "={{ $json.body.email }}",
+              "Message": "={{ $json.body.message }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "Name ",
+                "displayName": "Name ",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Email",
+                "displayName": "Email",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Message",
+                "displayName": "Message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {
+            "cellFormat": "USER_ENTERED"
+          }
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -432,
+          -224
+        ],
+        "id": "54ddd691-dfc9-4160-85b3-a208162767a6",
+        "name": "Append row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "w28Da0ZQ6OfgEoon",
+            "name": "Google Sheets account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sendTo": "petermv.baah@gmail.com",
+          "subject": "New  Lead",
+          "message": "=<div style=\"font-family: sans-serif; line-height: 1.6; color: #333;\">\n  <h2 style=\"color: #2a5fb2; border-bottom: 2px solid #eee; padding-bottom: 10px;\">🚀 New Website Lead</h2>\n  \n  <p><strong>Name:</strong> {{ $json.body.name }}</p>\n  <p><strong>Email:</strong> {{ $json.email }}</p>\n  \n  <div style=\"background: #f4f7f6; padding: 15px; border-left: 5px solid #2a5fb2; border-radius: 4px;\">\n    <strong>Message:</strong><br>\n    {{ $json.message }}\n  </div>\n\n  <p style=\"font-size: 12px; color: #888; margin-top: 25px;\">\n    This lead was automatically saved to your Google Sheet.\n  </p>\n</div>",
+          "options": {
+            "appendAttribution": false,
+            "senderName": ""
+          }
+        },
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [
+          -224,
+          -384
+        ],
+        "id": "94eb56e2-e2ed-4013-aa74-32f34b576c42",
+        "name": "Send a message",
+        "webhookId": "cc6ef3ca-4e25-4572-aa39-44777a958236",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "wowdcF7YQpO3kzPF",
+            "name": "Gmail account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "86a87fa4-da58-4003-9d54-38656d57c802",
+                "name": "body.name",
+                "value": "={{ $json.body.name }}",
+                "type": "string"
+              },
+              {
+                "id": "7fd60984-d94c-4d98-b91c-4dd5cd51b80d",
+                "name": "email",
+                "value": "={{ $json.body.email }}",
+                "type": "string"
+              },
+              {
+                "id": "2dbffaa1-e4d5-4440-8f3d-7702238f987f",
+                "name": "message",
+                "value": "={{ $json.body.message }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -432,
+          -384
+        ],
+        "id": "f35f87dd-c646-4750-b473-9deb40311f99",
+        "name": "Edit Fields"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Append row in sheet": {
+        "main": [
+          []
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version 879544ee",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-09T18:29:29.682Z",
+        "id": 381,
+        "workflowId": "HMGaWsRcrGEop4sPBopgI",
+        "versionId": "879544ee-5f83-4ca9-b2bc-f011fc0d465f",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

@@ -1,0 +1,682 @@
+{
+  "updatedAt": "2026-06-08T14:39:28.467Z",
+  "createdAt": "2026-05-14T15:43:27.967Z",
+  "id": "U68H7FxcbsGDKdbe",
+  "name": "[DEV] Internal Lead Intake & AI Qualification Workflow",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Request",
+        "formDescription": "Send as a request",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Name"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "Email"
+            },
+            {
+              "fieldLabel": "Request",
+              "fieldType": "textarea",
+              "placeholder": "Request"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5949e358-4c15-47fe-a476-8d4d7626391b",
+      "name": "On form submission",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -224,
+        80
+      ],
+      "webhookId": "786140c1-654e-4387-b913-979986ee6dbf"
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $json.submittedAt }}",
+        "format": "custom",
+        "customFormat": "MMMM d, h:mm a",
+        "options": {
+          "includeInputFields": true
+        }
+      },
+      "id": "feb034f6-a689-4698-a81c-95f513561afe",
+      "name": "Format Date",
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        0,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Request }}",
+        "options": {
+          "systemMessage": "You are a Lead Qualification Specialist for an AI Consultancy. Analyze the following 'Request' from a potential client. Based on the text, give them a 'Lead Score' from 1 to 10. 10 = High intent, specific business problem, mentions automation. 1 = Spam, gibberish, or 'test' messages. Respond ONLY with the number and a 5-word reason."
+        }
+      },
+      "id": "6a3fb0d7-2224-4021-85be-e82c303b60ed",
+      "name": "Lead Scoring Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "c9eccf7f-7076-4f2a-9e87-0226c80d4828",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        304
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "i0OpQdiKjVHo9w97",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "140v-XSDE8qsO_eTLlaPGHp4-P5gCbg0YlruN4JguvBY",
+          "mode": "list",
+          "cachedResultName": "Practice Test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/140v-XSDE8qsO_eTLlaPGHp4-P5gCbg0YlruN4JguvBY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/140v-XSDE8qsO_eTLlaPGHp4-P5gCbg0YlruN4JguvBY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('On form submission').item.json.Name }}",
+            "Email": "={{ $('On form submission').item.json.Email }}",
+            "Request": "={{ $('On form submission').item.json.Request }}",
+            "Readable Date": "={{ $('Format Date').item.json.formattedDate }}",
+            "Local Time (Lead)": "={{ DateTime.fromISO($('On form submission').item.json.submittedAt).setZone('America/New_York').toFormat('HH:mm') }} (EST)",
+            "Lead Score": "={{ $('Lead Scoring Agent').item.json.output }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Request",
+              "displayName": "Request",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Readable Date",
+              "displayName": "Readable Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Local Time (Lead)",
+              "displayName": "Local Time (Lead)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bd6740c2-2bb1-44d1-bbba-da60ad15d2dd",
+      "name": "Append row in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        576,
+        80
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w28Da0ZQ6OfgEoon",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "petermv.baah@gmail.com",
+        "subject": "=🔔 New Lead: {{ $('On form submission').item.json.Name }} - Score: {{ $('Lead Scoring Agent').item.json.output }}",
+        "message": "=<h2>New Lead Received</h2><p><strong>Name:</strong> {{ $('On form submission').item.json.Name }}</p><p><strong>Email:</strong> {{ $('On form submission').item.json.Email }}</p><p><strong>Request:</strong> {{ $('On form submission').item.json.Request }}</p><p><strong>Lead Score:</strong> {{ $('Lead Scoring Agent').item.json.output }}</p><p><strong>Submitted:</strong> {{ $('Format Date').item.json.formattedDate }} (EST)</p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "c0b86028-7853-49b8-ab6e-c8e602f72c44",
+      "name": "Send Lead Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        80
+      ],
+      "webhookId": "14436a19-e3b6-4351-bad1-e54915c8bf18",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wowdcF7YQpO3kzPF",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "building an automated system that receives a form submission, cleans the data, scores the lead using AI, stores the lead in Google Sheets, and sends an email notification.",
+        "height": 208,
+        "width": 368
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        480,
+        272
+      ],
+      "typeVersion": 1,
+      "id": "405681f0-389e-475d-92dc-4b2a30286d72",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Format Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Date": {
+      "main": [
+        [
+          {
+            "node": "Lead Scoring Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Scoring Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Lead Scoring Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send Lead Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true,
+    "errorWorkflow": "vK58g133kVb2pIEq"
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "0122b063-1814-4866-8b4a-8136a26de6b3",
+  "activeVersionId": "0122b063-1814-4866-8b4a-8136a26de6b3",
+  "versionCounter": 86,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-05-14T15:43:27.971Z",
+      "createdAt": "2026-05-14T15:43:27.971Z",
+      "role": "workflow:owner",
+      "workflowId": "U68H7FxcbsGDKdbe",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-05-26T17:08:23.000Z",
+    "createdAt": "2026-05-26T17:00:43.596Z",
+    "versionId": "0122b063-1814-4866-8b4a-8136a26de6b3",
+    "workflowId": "U68H7FxcbsGDKdbe",
+    "nodes": [
+      {
+        "parameters": {
+          "formTitle": "Request",
+          "formDescription": "Send as a request",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "Name",
+                "placeholder": "Name"
+              },
+              {
+                "fieldLabel": "Email",
+                "fieldType": "email",
+                "placeholder": "Email"
+              },
+              {
+                "fieldLabel": "Request",
+                "fieldType": "textarea",
+                "placeholder": "Request"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "5949e358-4c15-47fe-a476-8d4d7626391b",
+        "name": "On form submission",
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.5,
+        "position": [
+          -224,
+          80
+        ],
+        "webhookId": "786140c1-654e-4387-b913-979986ee6dbf"
+      },
+      {
+        "parameters": {
+          "operation": "formatDate",
+          "date": "={{ $json.submittedAt }}",
+          "format": "custom",
+          "customFormat": "MMMM d, h:mm a",
+          "options": {
+            "includeInputFields": true
+          }
+        },
+        "id": "feb034f6-a689-4698-a81c-95f513561afe",
+        "name": "Format Date",
+        "type": "n8n-nodes-base.dateTime",
+        "typeVersion": 2,
+        "position": [
+          0,
+          80
+        ]
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.Request }}",
+          "options": {
+            "systemMessage": "You are a Lead Qualification Specialist for an AI Consultancy. Analyze the following 'Request' from a potential client. Based on the text, give them a 'Lead Score' from 1 to 10. 10 = High intent, specific business problem, mentions automation. 1 = Spam, gibberish, or 'test' messages. Respond ONLY with the number and a 5-word reason."
+          }
+        },
+        "id": "6a3fb0d7-2224-4021-85be-e82c303b60ed",
+        "name": "Lead Scoring Agent",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3.1,
+        "position": [
+          224,
+          80
+        ]
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "id": "c9eccf7f-7076-4f2a-9e87-0226c80d4828",
+        "name": "OpenAI Chat Model",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          304,
+          304
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "i0OpQdiKjVHo9w97",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "140v-XSDE8qsO_eTLlaPGHp4-P5gCbg0YlruN4JguvBY",
+            "mode": "list",
+            "cachedResultName": "Practice Test",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/140v-XSDE8qsO_eTLlaPGHp4-P5gCbg0YlruN4JguvBY/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/140v-XSDE8qsO_eTLlaPGHp4-P5gCbg0YlruN4JguvBY/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Name": "={{ $('On form submission').item.json.Name }}",
+              "Email": "={{ $('On form submission').item.json.Email }}",
+              "Request": "={{ $('On form submission').item.json.Request }}",
+              "Readable Date": "={{ $('Format Date').item.json.formattedDate }}",
+              "Local Time (Lead)": "={{ DateTime.fromISO($('On form submission').item.json.submittedAt).setZone('America/New_York').toFormat('HH:mm') }} (EST)",
+              "Lead Score": "={{ $('Lead Scoring Agent').item.json.output }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "Name",
+                "displayName": "Name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Email",
+                "displayName": "Email",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Request",
+                "displayName": "Request",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Readable Date",
+                "displayName": "Readable Date",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Local Time (Lead)",
+                "displayName": "Local Time (Lead)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Lead Score",
+                "displayName": "Lead Score",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "bd6740c2-2bb1-44d1-bbba-da60ad15d2dd",
+        "name": "Append row in sheet",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          576,
+          80
+        ],
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "w28Da0ZQ6OfgEoon",
+            "name": "Google Sheets account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sendTo": "petermv.baah@gmail.com",
+          "subject": "=🔔 New Lead: {{ $('On form submission').item.json.Name }} - Score: {{ $('Lead Scoring Agent').item.json.output }}",
+          "message": "=<h2>New Lead Received</h2><p><strong>Name:</strong> {{ $('On form submission').item.json.Name }}</p><p><strong>Email:</strong> {{ $('On form submission').item.json.Email }}</p><p><strong>Request:</strong> {{ $('On form submission').item.json.Request }}</p><p><strong>Lead Score:</strong> {{ $('Lead Scoring Agent').item.json.output }}</p><p><strong>Submitted:</strong> {{ $('Format Date').item.json.formattedDate }} (EST)</p>",
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "id": "c0b86028-7853-49b8-ab6e-c8e602f72c44",
+        "name": "Send Lead Email",
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.1,
+        "position": [
+          800,
+          80
+        ],
+        "webhookId": "14436a19-e3b6-4351-bad1-e54915c8bf18",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "wowdcF7YQpO3kzPF",
+            "name": "Gmail account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "building an automated system that receives a form submission, cleans the data, scores the lead using AI, stores the lead in Google Sheets, and sends an email notification.",
+          "height": 208,
+          "width": 368
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          480,
+          272
+        ],
+        "typeVersion": 1,
+        "id": "405681f0-389e-475d-92dc-4b2a30286d72",
+        "name": "Sticky Note"
+      }
+    ],
+    "connections": {
+      "On form submission": {
+        "main": [
+          [
+            {
+              "node": "Format Date",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Format Date": {
+        "main": [
+          [
+            {
+              "node": "Lead Scoring Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Lead Scoring Agent": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Lead Scoring Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Append row in sheet": {
+        "main": [
+          [
+            {
+              "node": "Send Lead Email",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version 0122b063",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-05-26T17:08:23.707Z",
+        "id": 288,
+        "workflowId": "U68H7FxcbsGDKdbe",
+        "versionId": "0122b063-1814-4866-8b4a-8136a26de6b3",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      },
+      {
+        "createdAt": "2026-06-08T14:39:28.577Z",
+        "id": 379,
+        "workflowId": "U68H7FxcbsGDKdbe",
+        "versionId": "0122b063-1814-4866-8b4a-8136a26de6b3",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      },
+      {
+        "createdAt": "2026-06-08T14:39:28.552Z",
+        "id": 378,
+        "workflowId": "U68H7FxcbsGDKdbe",
+        "versionId": "0122b063-1814-4866-8b4a-8136a26de6b3",
+        "event": "deactivated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

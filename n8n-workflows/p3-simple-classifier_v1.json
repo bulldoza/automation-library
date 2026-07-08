@@ -1,0 +1,509 @@
+{
+  "updatedAt": "2026-06-21T17:22:41.787Z",
+  "createdAt": "2026-06-20T19:43:42.599Z",
+  "id": "HyVOwdxLspyGhkbZ",
+  "name": "P3 – Simple Classifier",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "IT Service Request",
+        "formDescription": "Submit your issue here",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Issue description",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Your Name",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "IT support will be in touch shortly!"
+            }
+          }
+        }
+      },
+      "id": "04bf7755-40cb-4e7c-8b1a-d671dbd59f2e",
+      "name": "On form submission",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        112
+      ],
+      "webhookId": "54a4287e-4479-4c47-b4ac-a270eeee66b6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "267dcef0-9799-47ff-b11a-dca92d81f83b",
+              "name": "ID",
+              "value": "={{ $json.submittedAt.toDateTime().ts.toString(36).toUpperCase() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a555a85e-ab35-40a8-8ff0-e965eff3d512",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Issue:\n\n```\n{{ $('On form submission').item.json['Issue description'] }}\n```",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "### **Role**\n\nYou are a text classification system for an IT support helpdesk.\nYour task is to read an incoming support ticket and classify it as either **\"Urgent\"** or **\"Not urgent\"** based on the content.\n\n### Classification Rules:\n\n* **Urgent** if the ticket describes:\n  * Complete system or network outages.\n  * Inability to perform critical work tasks.\n  * Security breaches or data loss.\n  * Hardware failure affecting essential operations.\n  * Issues impacting multiple users or key business functions.\n  * Time-sensitive problems needing immediate attention.\n\n* **Not urgent** if the ticket describes:\n  * Minor bugs or usability issues.\n  * Requests for information, training, or feature changes.\n  * Scheduled maintenance or non-critical updates.\n  * Problems with available workarounds.\n  * Single-user issues not blocking essential tasks.\n\n### Output Format:\n\nRespond **only** with one of the following labels:\n\n* `Urgent`\n* `Not urgent`"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "69d703ff-9f62-4895-abfe-fc8396aa6d0e",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        448,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0
+        }
+      },
+      "id": "2a2d9d84-6057-4f6c-afdd-d1012844d223",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        336
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "i0OpQdiKjVHo9w97",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{ \"prio\": \"Urgent\" }"
+      },
+      "id": "4a22df7b-2299-4340-afbc-cd71538ec6ee",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        592,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "bulldoza",
+          "mode": "list",
+          "cachedResultName": "bulldoza"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-ai-bootcamp",
+          "mode": "list",
+          "cachedResultName": "n8n-ai-bootcamp"
+        },
+        "filePath": "=day 1/project 3/tickets/{{ $('Edit Fields').item.json.ID }}.txt",
+        "fileContent": "=Prio: {{ $json.output.prio }}\n\nName: {{ $('On form submission').item.json['Your Name'] }}\n\nSubmitted: {{ $('On form submission').item.json.submittedAt }}\n\nDescription:\n{{ $('On form submission').item.json['Issue description'] }}",
+        "commitMessage": "new ticket"
+      },
+      "id": "1e824ba0-f2fa-4a96-aee5-7387cd0afddd",
+      "name": "Create a file",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        112
+      ],
+      "webhookId": "ca9fc2da-79dc-4fa0-8462-d7c4c80f9e38",
+      "credentials": {
+        "githubApi": {
+          "id": "Gz7aNrcVXGc1r3Qf",
+          "name": "GitHub account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Create a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "01624f4c-372f-41b9-b656-afdb22d7ccee",
+  "activeVersionId": "01624f4c-372f-41b9-b656-afdb22d7ccee",
+  "versionCounter": 21,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-20T19:43:42.600Z",
+      "createdAt": "2026-06-20T19:43:42.600Z",
+      "role": "workflow:owner",
+      "workflowId": "HyVOwdxLspyGhkbZ",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2026-06-20T18:04:11.956Z",
+      "createdAt": "2026-06-20T18:04:11.956Z",
+      "id": "6ByrLwhmwxnr43sx",
+      "name": "O'Reilly n8n"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2026-06-21T17:25:36.000Z",
+    "createdAt": "2026-06-21T17:22:41.788Z",
+    "versionId": "01624f4c-372f-41b9-b656-afdb22d7ccee",
+    "workflowId": "HyVOwdxLspyGhkbZ",
+    "nodes": [
+      {
+        "parameters": {
+          "formTitle": "IT Service Request",
+          "formDescription": "Submit your issue here",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "Issue description",
+                "fieldType": "textarea",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Your Name",
+                "requiredField": true
+              }
+            ]
+          },
+          "options": {
+            "respondWithOptions": {
+              "values": {
+                "formSubmittedText": "IT support will be in touch shortly!"
+              }
+            }
+          }
+        },
+        "id": "04bf7755-40cb-4e7c-8b1a-d671dbd59f2e",
+        "name": "On form submission",
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.3,
+        "position": [
+          0,
+          112
+        ],
+        "webhookId": "54a4287e-4479-4c47-b4ac-a270eeee66b6"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "267dcef0-9799-47ff-b11a-dca92d81f83b",
+                "name": "ID",
+                "value": "={{ $json.submittedAt.toDateTime().ts.toString(36).toUpperCase() }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "a555a85e-ab35-40a8-8ff0-e965eff3d512",
+        "name": "Edit Fields",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          224,
+          112
+        ]
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Issue:\n\n```\n{{ $('On form submission').item.json['Issue description'] }}\n```",
+          "hasOutputParser": true,
+          "messages": {
+            "messageValues": [
+              {
+                "message": "### **Role**\n\nYou are a text classification system for an IT support helpdesk.\nYour task is to read an incoming support ticket and classify it as either **\"Urgent\"** or **\"Not urgent\"** based on the content.\n\n### Classification Rules:\n\n* **Urgent** if the ticket describes:\n  * Complete system or network outages.\n  * Inability to perform critical work tasks.\n  * Security breaches or data loss.\n  * Hardware failure affecting essential operations.\n  * Issues impacting multiple users or key business functions.\n  * Time-sensitive problems needing immediate attention.\n\n* **Not urgent** if the ticket describes:\n  * Minor bugs or usability issues.\n  * Requests for information, training, or feature changes.\n  * Scheduled maintenance or non-critical updates.\n  * Problems with available workarounds.\n  * Single-user issues not blocking essential tasks.\n\n### Output Format:\n\nRespond **only** with one of the following labels:\n\n* `Urgent`\n* `Not urgent`"
+              }
+            ]
+          },
+          "batching": {}
+        },
+        "id": "69d703ff-9f62-4895-abfe-fc8396aa6d0e",
+        "name": "Basic LLM Chain",
+        "type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "typeVersion": 1.9,
+        "position": [
+          448,
+          112
+        ]
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list",
+            "cachedResultName": "gpt-4o-mini"
+          },
+          "builtInTools": {},
+          "options": {
+            "temperature": 0
+          }
+        },
+        "id": "2a2d9d84-6057-4f6c-afdd-d1012844d223",
+        "name": "OpenAI Chat Model",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          432,
+          336
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "i0OpQdiKjVHo9w97",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsonSchemaExample": "{ \"prio\": \"Urgent\" }"
+        },
+        "id": "4a22df7b-2299-4340-afbc-cd71538ec6ee",
+        "name": "Structured Output Parser",
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          592,
+          336
+        ]
+      },
+      {
+        "parameters": {
+          "resource": "file",
+          "owner": {
+            "__rl": true,
+            "value": "bulldoza",
+            "mode": "list",
+            "cachedResultName": "bulldoza"
+          },
+          "repository": {
+            "__rl": true,
+            "value": "n8n-ai-bootcamp",
+            "mode": "list",
+            "cachedResultName": "n8n-ai-bootcamp"
+          },
+          "filePath": "=day 1/project 3/tickets/{{ $('Edit Fields').item.json.ID }}.txt",
+          "fileContent": "=Prio: {{ $json.output.prio }}\n\nName: {{ $('On form submission').item.json['Your Name'] }}\n\nSubmitted: {{ $('On form submission').item.json.submittedAt }}\n\nDescription:\n{{ $('On form submission').item.json['Issue description'] }}",
+          "commitMessage": "new ticket"
+        },
+        "id": "1e824ba0-f2fa-4a96-aee5-7387cd0afddd",
+        "name": "Create a file",
+        "type": "n8n-nodes-base.github",
+        "typeVersion": 1.1,
+        "position": [
+          800,
+          112
+        ],
+        "webhookId": "ca9fc2da-79dc-4fa0-8462-d7c4c80f9e38",
+        "credentials": {
+          "githubApi": {
+            "id": "Gz7aNrcVXGc1r3Qf",
+            "name": "GitHub account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "On form submission": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Basic LLM Chain",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Basic LLM Chain": {
+        "main": [
+          [
+            {
+              "node": "Create a file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Basic LLM Chain",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Basic LLM Chain",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version 01624f4c",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-21T17:25:36.110Z",
+        "id": 461,
+        "workflowId": "HyVOwdxLspyGhkbZ",
+        "versionId": "01624f4c-372f-41b9-b656-afdb22d7ccee",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

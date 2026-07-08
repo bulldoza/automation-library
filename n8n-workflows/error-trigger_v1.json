@@ -1,0 +1,185 @@
+{
+  "updatedAt": "2026-06-05T14:26:33.621Z",
+  "createdAt": "2026-06-05T14:02:26.100Z",
+  "id": "vK58g133kVb2pIEq",
+  "name": "Error Trigger",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "15356107-de0c-4479-a794-04130336732a",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "f02ea50d-3852-4b7e-97f6-5d0552317824",
+      "name": "Send a message",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        0
+      ],
+      "parameters": {
+        "operation": "send",
+        "sendTo": "petermv.baah@gmail.com",
+        "subject": "=⚠️ n8n Error: {{ $json.workflow.name }}",
+        "emailType": "text",
+        "message": "=An error occurred in your n8n workflow.\n\nWorkflow: {{ $json.workflow.name }}\nExecution ID: {{ $json.execution.id }}\nError: {{ $json.execution.error.message }}\n\nPlease check your n8n dashboard for more details.",
+        "options": {}
+      },
+      "webhookId": "56acb419-8bf0-43a6-9bdd-78aeaeb8532c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wowdcF7YQpO3kzPF",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "01c8a950-5e98-40be-b192-6eba2524fa46",
+  "activeVersionId": "49d4392d-8db3-4c8f-84ce-7a72420acfd0",
+  "versionCounter": 15,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-05T14:02:26.102Z",
+      "createdAt": "2026-06-05T14:02:26.102Z",
+      "role": "workflow:owner",
+      "workflowId": "vK58g133kVb2pIEq",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-06-05T14:03:45.000Z",
+    "createdAt": "2026-06-05T14:03:36.106Z",
+    "versionId": "49d4392d-8db3-4c8f-84ce-7a72420acfd0",
+    "workflowId": "vK58g133kVb2pIEq",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.errorTrigger",
+        "typeVersion": 1,
+        "position": [
+          -304,
+          0
+        ],
+        "id": "6f6ff2df-8088-4000-83c0-7db46190aedf",
+        "name": "Error Trigger"
+      },
+      {
+        "parameters": {
+          "sendTo": "petermv.baah@gmail.com",
+          "subject": "error occured",
+          "emailType": "text",
+          "message": "An error occured",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [
+          -96,
+          0
+        ],
+        "id": "d32940de-a957-45e9-adff-8ca59693a20e",
+        "name": "Send a message",
+        "webhookId": "c221eb47-afe9-4f34-8dba-84b83d45ab3e",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "wowdcF7YQpO3kzPF",
+            "name": "Gmail account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Error Trigger": {
+        "main": [
+          [
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version 49d4392d",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-05T14:03:45.309Z",
+        "id": 360,
+        "workflowId": "vK58g133kVb2pIEq",
+        "versionId": "49d4392d-8db3-4c8f-84ce-7a72420acfd0",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      },
+      {
+        "createdAt": "2026-06-05T14:24:17.269Z",
+        "id": 364,
+        "workflowId": "vK58g133kVb2pIEq",
+        "versionId": "49d4392d-8db3-4c8f-84ce-7a72420acfd0",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      },
+      {
+        "createdAt": "2026-06-05T14:24:17.254Z",
+        "id": 363,
+        "workflowId": "vK58g133kVb2pIEq",
+        "versionId": "49d4392d-8db3-4c8f-84ce-7a72420acfd0",
+        "event": "deactivated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

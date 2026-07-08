@@ -1,0 +1,131 @@
+{
+  "updatedAt": "2026-02-23T20:48:53.000Z",
+  "createdAt": "2026-02-23T20:39:56.337Z",
+  "id": "hy7kV4PGF5baalfXwjqJV",
+  "name": "Form Submission to Google Sheets",
+  "description": null,
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "form submit",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -192,
+        -32
+      ],
+      "id": "ad2f20cd-e61d-4206-98b2-ab5121dcd445",
+      "name": "Webhook1",
+      "webhookId": "0aaacecf-f17f-46fb-8237-085f1c317ff4"
+    },
+    {
+      "parameters": {
+        "jsCode": "const required = ['name', 'email', 'request'];\n\nfor (const field of required) {\n  if (!$json[field]) {\n    throw new Error(`Missing required field: ${field}`);\n  }\n}\n\nreturn [\n  {\n    json: {\n      name: $json.name.trim(),\n      email: $json.email.toLowerCase().trim(),\n      request: $json.request.trim(),\n      timestamp: new Date().toISOString()\n    }\n  }\n];\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        -32
+      ],
+      "id": "b065e390-8b4c-4ef7-bb49-a22c3c1a2c38",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        -32
+      ],
+      "id": "59d88ba3-cb14-494a-87e5-fa9bc7399f8e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w28Da0ZQ6OfgEoon",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "f623001e-e05a-4d4e-85f2-1ab29e3c1862",
+  "activeVersionId": null,
+  "versionCounter": 19,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-02-23T20:39:56.339Z",
+      "createdAt": "2026-02-23T20:39:56.339Z",
+      "role": "workflow:owner",
+      "workflowId": "hy7kV4PGF5baalfXwjqJV",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

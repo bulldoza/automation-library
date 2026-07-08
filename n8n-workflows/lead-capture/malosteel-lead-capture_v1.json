@@ -1,0 +1,636 @@
+{
+  "updatedAt": "2026-06-11T17:11:35.464Z",
+  "createdAt": "2026-03-24T00:35:16.223Z",
+  "id": "f2Y6oBrDhx9Gcnpr",
+  "name": "Malosteel Lead Capture",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "malosteel-lead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -752,
+        -320
+      ],
+      "id": "dd54a89b-388b-410a-897f-bcd82ab1dbc4",
+      "name": "Webhook",
+      "webhookId": "2092cf48-c6aa-4851-8cbb-a13cf563163f"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5e78ea5a-0dc1-446f-9419-2b4d6692ef94",
+              "name": "name",
+              "value": "={{$json.body.name}}",
+              "type": "string"
+            },
+            {
+              "id": "472419c1-20f7-4f71-974b-cce68153c0ff",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "6faf16bc-28c9-4b7f-88f4-747f0fc1b489",
+              "name": "phone",
+              "value": "={{$json.body.phone}}",
+              "type": "string"
+            },
+            {
+              "id": "30161694-c84a-458f-974d-0552f29d5fc0",
+              "name": "company",
+              "value": "={{ $json.body.company }}",
+              "type": "string"
+            },
+            {
+              "id": "1385e10d-9bf8-4901-a50e-8ee560a83e0a",
+              "name": "website",
+              "value": "={{ $json.body.website }}",
+              "type": "string"
+            },
+            {
+              "id": "cbd0c37a-a1de-49d3-ad03-9d0ca842385f",
+              "name": "service",
+              "value": "={{ $json.body.service }}",
+              "type": "string"
+            },
+            {
+              "id": "8514ce3a-ad65-4bdd-b50d-486ef65d9d7c",
+              "name": "timeline",
+              "value": "={{ $json.body.timeline }}",
+              "type": "string"
+            },
+            {
+              "id": "0e4554b3-14e8-4e05-bcd6-8c971abe62e6",
+              "name": "details",
+              "value": "={{ $json.body.details }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -544,
+        -320
+      ],
+      "id": "64e1a3e9-8c1a-4334-bf04-762145217a5b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1bR7QoteOiOLw5BAzfw1K_me6bnlI9v-DteDPVwONcP4",
+          "mode": "list",
+          "cachedResultName": "Malosteel Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bR7QoteOiOLw5BAzfw1K_me6bnlI9v-DteDPVwONcP4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "MSL",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bR7QoteOiOLw5BAzfw1K_me6bnlI9v-DteDPVwONcP4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "phone": "={{ $json.phone }}",
+            "Company": "={{ $json.company }}",
+            "Website": "={{ $json.website }}",
+            "Service": "={{ $json.service }}",
+            "Timeline": "={{ $json.timeline }}",
+            "Details": "={{ $json.details }}",
+            "Date": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timeline",
+              "displayName": "Timeline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Details",
+              "displayName": "Details",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -224,
+        -320
+      ],
+      "id": "84aa224e-e6b9-46d5-95f0-33a958f36c35",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BilvEw7WltNshgzj",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "Frank.malosteel@gmail.com",
+        "subject": "New Lead- MaloSteel",
+        "message": "=New Lead Received\n\n<div style=\"font-family: sans-serif; line-height: 1.5; color: #333;\">\n  <h2 style=\"color: #2a5fb2; border-bottom: 1px solid #eee; padding-bottom: 10px;\">🚀 New Website Lead</h2>\n  \n  <p><strong>Name:</strong> {{ $json.name }}</p>\n  <p><strong>Email:</strong> {{ $json.email }}</p>\n  <p><strong>Phone:</strong> {{ $json.phone }}</p>\n  <p><strong>Company:</strong> {{ $json.company }}</p>\n  <br>\n  <div style=\"background: #f9f9f9; padding: 15px; border-radius: 5px;\">\n    <p><strong>Service:</strong> {{ $json.service }}</p>\n<p><strong>Timeline:</strong> {{ $json.timeline }}</p>\n<br>\n<div style=\"background: #f9f9f9; padding: 15px; border-radius: 5px;\">\n    <strong>Message/Details:</strong><br>\n    {{ $json.details }}\n</div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -368,
+        -144
+      ],
+      "id": "06f31529-ff5f-45ba-92f9-41fa9ecb0c5b",
+      "name": "Send a message",
+      "webhookId": "78e6c873-1cb6-4838-9da1-b0866a48fcef",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ILVVFpuO4nK2CLOI",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "vK58g133kVb2pIEq"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "93d9aa13-9255-4689-b548-3f58b95c1dad",
+  "activeVersionId": "93d9aa13-9255-4689-b548-3f58b95c1dad",
+  "versionCounter": 288,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-03-24T00:35:16.231Z",
+      "createdAt": "2026-03-24T00:35:16.231Z",
+      "role": "workflow:owner",
+      "workflowId": "f2Y6oBrDhx9Gcnpr",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-06-11T17:13:38.000Z",
+    "createdAt": "2026-06-11T17:11:35.465Z",
+    "versionId": "93d9aa13-9255-4689-b548-3f58b95c1dad",
+    "workflowId": "f2Y6oBrDhx9Gcnpr",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "malosteel-lead",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -752,
+          -320
+        ],
+        "id": "dd54a89b-388b-410a-897f-bcd82ab1dbc4",
+        "name": "Webhook",
+        "webhookId": "2092cf48-c6aa-4851-8cbb-a13cf563163f"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "5e78ea5a-0dc1-446f-9419-2b4d6692ef94",
+                "name": "name",
+                "value": "={{$json.body.name}}",
+                "type": "string"
+              },
+              {
+                "id": "472419c1-20f7-4f71-974b-cce68153c0ff",
+                "name": "email",
+                "value": "={{ $json.body.email }}",
+                "type": "string"
+              },
+              {
+                "id": "6faf16bc-28c9-4b7f-88f4-747f0fc1b489",
+                "name": "phone",
+                "value": "={{$json.body.phone}}",
+                "type": "string"
+              },
+              {
+                "id": "30161694-c84a-458f-974d-0552f29d5fc0",
+                "name": "company",
+                "value": "={{ $json.body.company }}",
+                "type": "string"
+              },
+              {
+                "id": "1385e10d-9bf8-4901-a50e-8ee560a83e0a",
+                "name": "website",
+                "value": "={{ $json.body.website }}",
+                "type": "string"
+              },
+              {
+                "id": "cbd0c37a-a1de-49d3-ad03-9d0ca842385f",
+                "name": "service",
+                "value": "={{ $json.body.service }}",
+                "type": "string"
+              },
+              {
+                "id": "8514ce3a-ad65-4bdd-b50d-486ef65d9d7c",
+                "name": "timeline",
+                "value": "={{ $json.body.timeline }}",
+                "type": "string"
+              },
+              {
+                "id": "0e4554b3-14e8-4e05-bcd6-8c971abe62e6",
+                "name": "details",
+                "value": "={{ $json.body.details }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -544,
+          -320
+        ],
+        "id": "64e1a3e9-8c1a-4334-bf04-762145217a5b",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1bR7QoteOiOLw5BAzfw1K_me6bnlI9v-DteDPVwONcP4",
+            "mode": "list",
+            "cachedResultName": "Malosteel Leads",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bR7QoteOiOLw5BAzfw1K_me6bnlI9v-DteDPVwONcP4/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "MSL",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bR7QoteOiOLw5BAzfw1K_me6bnlI9v-DteDPVwONcP4/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Name": "={{ $json.name }}",
+              "Email": "={{ $json.email }}",
+              "phone": "={{ $json.phone }}",
+              "Company": "={{ $json.company }}",
+              "Website": "={{ $json.website }}",
+              "Service": "={{ $json.service }}",
+              "Timeline": "={{ $json.timeline }}",
+              "Details": "={{ $json.details }}",
+              "Date": "={{ $now }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "Name",
+                "displayName": "Name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Email",
+                "displayName": "Email",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "phone",
+                "displayName": "phone",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Company",
+                "displayName": "Company",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Website",
+                "displayName": "Website",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Service",
+                "displayName": "Service",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Timeline",
+                "displayName": "Timeline",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Details",
+                "displayName": "Details",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Date",
+                "displayName": "Date",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -224,
+          -320
+        ],
+        "id": "84aa224e-e6b9-46d5-95f0-33a958f36c35",
+        "name": "Append row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "BilvEw7WltNshgzj",
+            "name": "Google Sheets account 3"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sendTo": "Frank.malosteel@gmail.com",
+          "subject": "New Lead- MaloSteel",
+          "message": "=New Lead Received\n\n<div style=\"font-family: sans-serif; line-height: 1.5; color: #333;\">\n  <h2 style=\"color: #2a5fb2; border-bottom: 1px solid #eee; padding-bottom: 10px;\">🚀 New Website Lead</h2>\n  \n  <p><strong>Name:</strong> {{ $json.name }}</p>\n  <p><strong>Email:</strong> {{ $json.email }}</p>\n  <p><strong>Phone:</strong> {{ $json.phone }}</p>\n  <p><strong>Company:</strong> {{ $json.company }}</p>\n  <br>\n  <div style=\"background: #f9f9f9; padding: 15px; border-radius: 5px;\">\n    <p><strong>Service:</strong> {{ $json.service }}</p>\n<p><strong>Timeline:</strong> {{ $json.timeline }}</p>\n<br>\n<div style=\"background: #f9f9f9; padding: 15px; border-radius: 5px;\">\n    <strong>Message/Details:</strong><br>\n    {{ $json.details }}\n</div>",
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [
+          -368,
+          -144
+        ],
+        "id": "06f31529-ff5f-45ba-92f9-41fa9ecb0c5b",
+        "name": "Send a message",
+        "webhookId": "78e6c873-1cb6-4838-9da1-b0866a48fcef",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "ILVVFpuO4nK2CLOI",
+            "name": "Gmail account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Append row in sheet": {
+        "main": [
+          []
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Peter Baah",
+    "name": "Version 93d9aa13",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-11T17:13:38.125Z",
+        "id": 402,
+        "workflowId": "f2Y6oBrDhx9Gcnpr",
+        "versionId": "93d9aa13-9255-4689-b548-3f58b95c1dad",
+        "event": "activated",
+        "userId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    ]
+  }
+}

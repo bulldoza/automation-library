@@ -1,0 +1,174 @@
+{
+  "updatedAt": "2026-06-20T18:04:15.759Z",
+  "createdAt": "2026-06-20T18:04:13.547Z",
+  "id": "5VzKzLNIlBRmPn0r",
+  "name": "P1 – Basic Automation",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "IT Service Request",
+        "formDescription": "Submit your issue here",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Issue description",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Your Name",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "IT support will be in touch shortly!"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d27ecf9c-801e-4d2a-8f6b-7a8c9b776ed2",
+      "name": "On form submission",
+      "webhookId": "779ae028-82a1-41f2-9c22-74b60c51e896"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "267dcef0-9799-47ff-b11a-dca92d81f83b",
+              "name": "ID",
+              "value": "={{ $json.submittedAt.toDateTime().ts.toString(36).toUpperCase() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ],
+      "id": "7ac921f1-6361-4bb1-ad7b-bbd4db85630a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "tobiaszwingmann-demo",
+          "mode": "list",
+          "cachedResultName": "tobiaszwingmann-demo",
+          "cachedResultUrl": "https://github.com/tobiaszwingmann-demo"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-ai-bootcamp",
+          "mode": "list",
+          "cachedResultName": "n8n-ai-bootcamp",
+          "cachedResultUrl": "https://github.com/tobiaszwingmann-demo/n8n-ai-bootcamp"
+        },
+        "filePath": "=day 1/project 1/tickets/{{ $json.ID }}.txt",
+        "fileContent": "=Name: {{ $('On form submission').item.json['Your Name'] }}\n\nSubmitted: {{ $('On form submission').item.json.submittedAt }}\n\nDescription:\n{{ $('On form submission').item.json['Issue description'] }}",
+        "commitMessage": "new ticket"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "200c5966-a9ae-45cf-b990-66084959f7e7",
+      "name": "Create a file",
+      "webhookId": "6b0de6a2-6f40-4566-b4c8-dc1699f32f26",
+      "credentials": {
+        "githubApi": {
+          "id": "Gz7aNrcVXGc1r3Qf",
+          "name": "GitHub account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Create a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "05734c2c-ab60-44c7-ad94-f3ff98734f69",
+  "activeVersionId": null,
+  "versionCounter": 2,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-20T18:04:13.552Z",
+      "createdAt": "2026-06-20T18:04:13.552Z",
+      "role": "workflow:owner",
+      "workflowId": "5VzKzLNIlBRmPn0r",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2026-06-20T18:04:11.956Z",
+      "createdAt": "2026-06-20T18:04:11.956Z",
+      "id": "6ByrLwhmwxnr43sx",
+      "name": "O'Reilly n8n"
+    }
+  ],
+  "activeVersion": null
+}

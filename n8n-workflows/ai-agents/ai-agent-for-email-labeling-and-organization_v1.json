@@ -1,0 +1,94 @@
+{
+  "updatedAt": "2026-06-11T15:30:04.000Z",
+  "createdAt": "2026-06-11T14:49:32.744Z",
+  "id": "DWXgagwZqxxO9Vw6",
+  "name": "AI Agent for Email Labeling and Organization",
+  "description": "Gmail trigger polling for new emails — base for AI email labeling agent.",
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -336,
+        -112
+      ],
+      "id": "f8b1521d-a506-4f94-878d-58034640e3e9",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wowdcF7YQpO3kzPF",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true,
+    "errorWorkflow": "vK58g133kVb2pIEq"
+  },
+  "staticData": {
+    "node:Gmail Trigger": {
+      "Gmail Trigger": {
+        "lastTimeChecked": 1781190450,
+        "possibleDuplicates": [
+          "19eb73962d78c684",
+          "19eb7392aae3cce2"
+        ]
+      }
+    }
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp",
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "c7889241-5f45-43f7-99c6-49c6bde74b9e",
+  "activeVersionId": null,
+  "versionCounter": 44,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-11T14:49:32.746Z",
+      "createdAt": "2026-06-11T14:49:32.746Z",
+      "role": "workflow:owner",
+      "workflowId": "DWXgagwZqxxO9Vw6",
+      "projectId": "DMsR6QpHlK2bNC1K",
+      "project": {
+        "updatedAt": "2026-02-06T23:32:17.456Z",
+        "createdAt": "2026-02-04T00:58:42.297Z",
+        "id": "DMsR6QpHlK2bNC1K",
+        "name": "Peter Baah <petermv.baah@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "c65020a2-df7f-4b4a-a3de-fb7096935cfc"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
