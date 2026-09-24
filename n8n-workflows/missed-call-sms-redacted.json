@@ -1,0 +1,731 @@
+{
+  "name": "[DEMO-C4AutoDetail] Missed Call SMS",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "grorank-missed-call",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "126f14b8-1649-444f-8dca-7a7dc8a78a4c",
+      "name": "Missed Call Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        1456,
+        256
+      ],
+      "webhookId": "aa144326-2c83-406e-a1f9-7a68d17db21c"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "callStatus",
+              "value": "={{ $json.body?.DialCallStatus ?? $json.body?.CallStatus ?? $json.DialCallStatus ?? $json.CallStatus ?? \"\" }}",
+              "type": "string"
+            },
+            {
+              "id": "a2",
+              "name": "callerNumber",
+              "value": "={{ $json.body?.From ?? $json.From ?? \"\" }}",
+              "type": "string"
+            },
+            {
+              "id": "a3",
+              "name": "businessNumber",
+              "value": "={{ $json.body?.To ?? $json.To ?? \"\" }}",
+              "type": "string"
+            },
+            {
+              "id": "a4",
+              "name": "dialBridged",
+              "value": "={{ String($json.body?.DialBridged ?? $json.DialBridged ?? \"\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ce0760a7-e600-478c-91f1-f2b75d08a21a",
+      "name": "Normalize Call Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1680,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Hangup/></Response>",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/xml"
+              }
+            ]
+          },
+          "enableStreaming": false
+        }
+      },
+      "id": "d83b9a59-3a57-4dbe-aab6-0348e64a2cdf",
+      "name": "Respond 200 to Twilio",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1904,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "24543bdc-3c24-4881-85d7-1aa293e5db1f",
+              "leftValue": "={{ [\"no-answer\",\"busy\",\"failed\",\"canceled\"].includes($json.callStatus) || $json.dialBridged === \"false\" }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4a9a98c3-f673-44fb-bdad-5a89116423c4",
+      "name": "Is Missed Call?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2128,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "from": "=+19804809265",
+        "to": "={{ $json.callerNumber }}",
+        "message": "={{ $json.smsMessage }}",
+        "options": {}
+      },
+      "id": "ce5241bf-6684-489c-b7c3-fb1c61f07b7e",
+      "name": "Send Missed Call SMS",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        3696,
+        256
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## C4 Auto Detail - Missed Call Lead Capture\n**Flow:** missed call -> is there already an active lead (Sheet row, same Business+Caller, Status New/Qualifying)? -> if not: text the caller, add ONE lead row, start a fresh conversation state.\n\n**Client-specific values:** only the 'Client Config' node. To reuse for another business, edit that node.\n\n**Sheet ('GroRank Missed Call' > 'Missed Call') headers, row 1:**\nTimestamp | Caller Number | Business Number | Name | Service | Vehicle | Preferred Day/Time | Status | Summary\n\n**Twilio:** Voice status callback -> this webhook (POST). Inbound SMS is handled by the SMS AI Agent workflow.",
+        "height": 330,
+        "width": 620,
+        "color": 4
+      },
+      "id": "372765db-9f2d-4e7e-aa2d-3c0bb335df28",
+      "name": "Sticky Note c053ce84",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1ibPBIdRN8c_d8jHYRJfSFhjkdZDOrVzU_lq10bOT6dY",
+          "cachedResultName": "GroRank Missed Call"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gid=0",
+          "cachedResultName": "Missed Call"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.timestamp }}",
+            "Caller Number": "={{ $json.callerNumber }}",
+            "Business Number": "={{ $json.businessNumber }}",
+            "Name": "",
+            "Service": "",
+            "Vehicle": "",
+            "Preferred Day/Time": "",
+            "Status": "New",
+            "Summary": ""
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Caller Number",
+              "displayName": "Caller Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Business Number",
+              "displayName": "Business Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Vehicle",
+              "displayName": "Vehicle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Preferred Day/Time",
+              "displayName": "Preferred Day/Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "58125254-2c5b-4839-a91b-572afee03fd4",
+      "name": "Create Lead Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3696,
+        480
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\n\nconst CLIENT = {\n  id: 'c4-auto-detail',\n  name: 'C4 Auto Detail Solutions',\n  shortName: 'C4',\n  businessType: 'auto detailing',\n  timezone: 'America/Phoenix',\n  hoursText: 'Mon-Fri 8am-5pm, Sat 8am-2pm, closed Sunday',\n  hours: { 1: [8, 17], 2: [8, 17], 3: [8, 17], 4: [8, 17], 5: [8, 17], 6: [8, 14] },\n  services: ['Interior Detail', 'Exterior Detail', 'Full Detail', 'Ceramic Coating', 'Paint Correction'],\n  servicesPrompt: 'interior, exterior, full detail, ceramic coating, or paint correction',\n  requiredFields: ['service', 'vehicle', 'name', 'preferred_time'],\n  inPersonScopeServices: ['Ceramic Coating', 'Paint Correction'],\n  extraRules: 'Ceramic coating and paint correction are scoped in person first, so never quote or schedule them; collect the same details and the team will follow up to arrange an in-person assessment.',\n  maxTurns: 8,\n};\n\nconst t = $now.setZone(CLIENT.timezone);\nconst window = CLIENT.hours[t.weekday];\nconst isOpen = !!window && t.hour >= window[0] && t.hour < window[1];\n\nreturn [{ json: { ...item, client: CLIENT, isOpen, sessionKey: `${item.businessNumber}:${item.callerNumber}` } }];\n"
+      },
+      "id": "f8c4e0d4-e6d4-4fb4-bc0e-cd582d2bd04a",
+      "name": "Client Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2352,
+        256
+      ],
+      "notes": "ALL client-specific values live here (name, hours, services, required fields, special rules). To reuse for another business, edit only this node."
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "1eikb3UtbM2TEZGs",
+          "mode": "id"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sessionKey",
+              "keyValue": "={{ $json.sessionKey }}"
+            }
+          ]
+        },
+        "limit": 2
+      },
+      "id": "ca02cb64-22ee-4fba-a521-791e4969b5a0",
+      "name": "Get Conversation State",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2576,
+        256
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1ibPBIdRN8c_d8jHYRJfSFhjkdZDOrVzU_lq10bOT6dY",
+          "cachedResultName": "GroRank Missed Call"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gid=0",
+          "cachedResultName": "Missed Call"
+        },
+        "options": {}
+      },
+      "id": "867f370e-266d-463d-ab4e-99b890a55382",
+      "name": "Get Lead Rows",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2800,
+        256
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const cfg = $('Client Config').first().json;\nconst digits = (s) => String(s ?? '').replace(/\\D/g, '');\nconst rows = $input.all().map((i) => i.json);\nconst stored = $('Get Conversation State').first().json;\n\nlet state = null;\ntry { state = stored && stored.state ? JSON.parse(stored.state) : null; } catch (e) { state = null; }\n\nconst activeRow = rows.find((r) =>\n  digits(r['Business Number']) === digits(cfg.businessNumber) &&\n  digits(r['Caller Number']) === digits(cfg.callerNumber) &&\n  ['new', 'qualifying'].includes(String(r['Status'] ?? '').trim().toLowerCase())\n);\n\nlet isNewLead = true;\nlet reason = 'new_lead';\nif (state && state.optedOut === true) {\n  isNewLead = false;\n  reason = 'opted_out';\n} else if (activeRow) {\n  isNewLead = false;\n  reason = 'active_lead_exists';\n}\n\nreturn [{ json: { ...cfg, isNewLead, reason } }];\n"
+      },
+      "id": "d796eb6a-3b5d-4586-8e49-956a4ec1ff3d",
+      "name": "Decide Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3024,
+        256
+      ],
+      "notes": "Dedup rule: a call is part of an existing lead only if a row with the same Business Number + Caller Number has Status New or Qualifying. Qualified/Closed/Handoff rows never block a new lead."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "nl-1",
+              "leftValue": "={{ $json.isNewLead }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "238fee2f-4326-404c-bdf8-e8ba7f05aad2",
+      "name": "New Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3248,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const c = $json;\nconst cl = c.client;\n\nconst opening = c.isOpen\n  ? `Hi! This is ${cl.name}. Sorry we missed your call. What can we help you with - ${cl.servicesPrompt}? Reply STOP to opt out.`\n  : `Hi! This is ${cl.name}. Sorry we missed your call - we're closed right now, but the team will follow up when we open. What service do you need - ${cl.servicesPrompt}? Reply STOP to opt out.`;\n\nconst state = {\n  leadId: `L${Date.now()}`,\n  client: cl,\n  active: true,\n  status: 'new',\n  turns: 0,\n  optedOut: false,\n  lead: { name: '', service: '', vehicle: '', preferred_time: '', notes: '', summary: '' },\n  history: [{ role: 'assistant', content: opening, delivery: 'pending' }],\n  seen: [],\n  rate: [],\n  createdAt: $now.toISO(),\n};\n\nreturn [{\n  json: {\n    ...c,\n    smsMessage: opening,\n    timestamp: $now.setZone(cl.timezone).toFormat('yyyy-LL-dd HH:mm'),\n    stateJson: JSON.stringify(state),\n  },\n}];\n"
+      },
+      "id": "069e7ba1-2fb6-4e0d-aecf-009e7bacdfb3",
+      "name": "Build SMS Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3472,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "1eikb3UtbM2TEZGs",
+          "mode": "id"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sessionKey",
+              "keyValue": "={{ $json.sessionKey }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "sessionKey": "={{ $json.sessionKey }}",
+            "callerNumber": "={{ $json.callerNumber }}",
+            "name": "",
+            "status": "new",
+            "state": "={{ $json.stateJson }}",
+            "address": "",
+            "issue": "",
+            "urgency": "",
+            "serviceType": "",
+            "dropOffOrMobile": "",
+            "vehicleType": "",
+            "notes": ""
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "sessionKey",
+              "displayName": "sessionKey",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "callerNumber",
+              "displayName": "callerNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "issue",
+              "displayName": "issue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "urgency",
+              "displayName": "urgency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "serviceType",
+              "displayName": "serviceType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "dropOffOrMobile",
+              "displayName": "dropOffOrMobile",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "vehicleType",
+              "displayName": "vehicleType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "notes",
+              "displayName": "notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "b3dbdf41-e6b4-4b6c-92a9-0f715d29feee",
+      "name": "Init Conversation State",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3696,
+        704
+      ],
+      "onError": "continueRegularOutput",
+      "notes": "Overwrites any stale conversation for this business+caller, so old context (any previous business/demo) can never carry into a new lead."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Missed Call Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Call Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Call Data": {
+      "main": [
+        [
+          {
+            "node": "Respond 200 to Twilio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond 200 to Twilio": {
+      "main": [
+        [
+          {
+            "node": "Is Missed Call?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Missed Call?": {
+      "main": [
+        [
+          {
+            "node": "Client Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Client Config": {
+      "main": [
+        [
+          {
+            "node": "Get Conversation State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Conversation State": {
+      "main": [
+        [
+          {
+            "node": "Get Lead Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lead Rows": {
+      "main": [
+        [
+          {
+            "node": "Decide Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decide Lead": {
+      "main": [
+        [
+          {
+            "node": "New Lead?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Lead?": {
+      "main": [
+        [
+          {
+            "node": "Build SMS Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build SMS Message": {
+      "main": [
+        [
+          {
+            "node": "Send Missed Call SMS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Lead Row",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Init Conversation State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "8aaafc05-9c3c-48d8-a449-5a9bf607d243",
+  "nodeGroups": [],
+  "id": "PRaaNxZOye43mrgO",
+  "tags": []
+}
+
